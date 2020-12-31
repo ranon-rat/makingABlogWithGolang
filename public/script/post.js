@@ -1,0 +1,34 @@
+function sendDocument() {
+    var _a = [
+        document.getElementById("titulo"),
+        document.getElementById("mineatura"),
+        document.getElementById("body"),
+    ], title = _a[0], mineatura = _a[1], body = _a[2];
+    if (!title.innerText || !mineatura.innerText || !body.innerText) {
+        alert("you need to define everything");
+        return;
+    }
+    if (title.innerText.length >= 50) {
+        alert("sorry but is too bigger for send that to the server");
+    }
+    else if (mineatura.innerText.length >= 100) {
+        alert("find another url more small");
+    }
+    else if (body.innerText.length >= 100000) {
+    }
+    console.log(title.innerText, mineatura.innerText, body.innerText);
+    fetch("/post", {
+        method: "POST",
+        body: JSON.stringify({
+            title: title.innerText,
+            mineatura: mineatura.innerText,
+            body: body.innerText
+        }),
+        headers: {
+            "Content-Type": "application/json"
+        }
+    });
+    title.innerText = "";
+    mineatura.innerText = "";
+    body.innerText = "";
+}

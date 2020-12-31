@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/public/style/prism.css">
+    <link rel="stylesheet" href="/public/style/style.css">
+
+    
+    <script src="/public/script/prism.js"></script>
+    <title>{{.Title}}</title>
+   
+</head>
+<body>
+    <ul id = "navegationVar"><li> <a href="#aboutMe">Home</a>
+    </li>
+    <li>
+       <a href="https://twitter.com/ranon_rat"> 
+        <img width="30" src="https://ranon-rat.herokuapp.com/image/twitter.png"></a>
+    </li>
+    <li><a href="https://discord.gg/e52RFh7Cg2">
+        <img width="30" src="https://ranon-rat.herokuapp.com/image/discord.png" >
+    </a>
+</li>
+<li>
+    <a href="https://www.instagram.com/ranon_rat/">
+        <img width="30" src="https://ranon-rat.herokuapp.com/image/instagram.png">
+    </a>
+</li>
+<li>
+     <a href="https://github.com/ranon-rat">
+        <img width="30" src="https://ranon-rat.herokuapp.com/image/github.png"></a>
+    </li></ul>
+
+
+    <article id="content">
+        {{ .Body}}
+    </article>
+    
+</body>
+</html>
