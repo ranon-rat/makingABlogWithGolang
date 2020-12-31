@@ -1,6 +1,6 @@
 # makingABlogWithGolang
  its not finished
-but im trying to do this without know anything of databases lol
+but im trying to do this while im learning about databases 
 
 for now only render the markdown and manage the request
 
