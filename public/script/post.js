@@ -16,8 +16,10 @@ function sendDocument() {
     }
     else if (body.innerText.length >= 100000) {
     }
+    console.log("sorry but wtf?");
+    console.log("sorry");
     console.log(title.innerText, mineatura.innerText, body.innerText);
-    fetch("/post", {
+    fetch(window.location.pathname, {
         method: "POST",
         body: JSON.stringify({
             title: title.innerText,
@@ -28,6 +30,7 @@ function sendDocument() {
             "Content-Type": "application/json"
         }
     });
+    console.log("change please");
     title.innerText = "";
     mineatura.innerText = "";
     body.innerText = "";

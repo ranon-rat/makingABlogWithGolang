@@ -14,8 +14,10 @@ function sendDocument(): void {
     alert("find another url more small");
   } else if (body.innerText.length >= 100000) {
   }
+  console.log("sorry but wtf?");
+  console.log("sorry");
   console.log(title.innerText, mineatura.innerText, body.innerText);
-  fetch("/post", {
+  fetch(window.location.pathname, {
     method: "POST",
     body: JSON.stringify({
       title: title.innerText,
@@ -26,6 +28,7 @@ function sendDocument(): void {
       "Content-Type": "application/json",
     },
   });
+  console.log("change please");
   title.innerText = "";
   mineatura.innerText = "";
   body.innerText = "";
