@@ -54,7 +54,7 @@ func addPublication(e document) error {
 }
 func getPublications(min, max int) (publications, error) {
 	// este es el consultorio croe que se llamaba asi , ya no me acuerdo xd
-	q := fmt.Sprintf("SELECT * FROM publ WHERE id <=%d AND id>%d", max, min)
+	q := fmt.Sprintf("SELECT * FROM publ WHERE id <=%d AND id>=%d", max, min)
 	db := getConnection()
 	// aqui lo que hace es conectarse a la base de datos
 	defer db.Close()

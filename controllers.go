@@ -34,14 +34,15 @@ func renderMarkdown(p chan document, id int) {
 	// but i want to use this with a db
 	var d publications
 	d, err := getPublications(id, id)
+
 	if err != nil || len(d.Publications) <= 0 {
-
+		fmt.Println(err)
+		fmt.Println(d)
 		log.Println("something is wrong")
-
 		p <- document{Title: "sorry but something is wrong", Body: "<h1> something wrong </h1>"}
 		return
 	}
-	fmt.Println(d)
+
 	// ya sabe, concurrencia
 	// obtiene el markdown
 	html := string(markdown.ToHTML([]byte(d.Publications[0].Body), parser, nil)) // despues lo pasa a html
@@ -49,8 +50,15 @@ func renderMarkdown(p chan document, id int) {
 
 }
 func renderInfo(w http.ResponseWriter, r *http.Request) {
+	attr := mux.Vars(r)
+	id, err := strconv.Atoi(attr["id"])
+	if err != nil {
+		fmt.Println("fuck ")
+		w.Write([]byte("sorry but agioue ´"))
+		return
+	}
 	p := make(chan document)
-	go renderMarkdown(p, 1)
+	go renderMarkdown(p, id)
 	t, err := template.ParseFiles("view/template.html")
 	if err != nil {
 		w.Write([]byte(err.Error()))
