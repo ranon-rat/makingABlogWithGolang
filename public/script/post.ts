@@ -1,5 +1,5 @@
 async function sendDocument() {
-  let [title, mineatura, body]: HTMLElement[] = [
+  let [title, mineatura, body]: any[] = [
     document.getElementById("titulo"),
     document.getElementById("mineatura"),
     document.getElementById("body"),

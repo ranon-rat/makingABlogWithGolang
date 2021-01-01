@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 
@@ -12,7 +13,12 @@ func routes() {
 	r := mux.NewRouter()
 	r.HandleFunc("/admin/postfile", newPost)
 	r.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		http.Redirect(w, r, "/0", 301)
+		number, err := getTheSizeOfTheQuery()
+		if err != nil {
+			w.Write([]byte("something is wrong sorry"))
+			return
+		}
+		http.Redirect(w, r, fmt.Sprintf("/%d", number/10), 301)
 	})
 	r.HandleFunc("/api/{page:[0-9]+}", api)
 	r.HandleFunc("/{page:[0-9]+}", func(w http.ResponseWriter, r *http.Request) {

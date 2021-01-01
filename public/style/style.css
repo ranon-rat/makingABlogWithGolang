@@ -58,12 +58,7 @@ td{
     background-size: 100% 100%;
     height: 20em;
 }
-.buttonElementID{
-    display:inline;
-    background-color: rgb(6, 4, 29);
-    text-decoration: none;
-    color:white;
-}
+
 #navegationVar {
 
     list-style-type: none;

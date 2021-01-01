@@ -1,48 +1,82 @@
+interface Pub {
+  Publications: {
+    id: number;
+    title: string;
+    mineatura: string;
+    body: string;
+  }[];
+  Size: number;
+}
 async function NewPublications() {
   let urlApi: string =
     "api" +
     "/" +
     window.location.pathname.split("/")[window.location.pathname.length - 1];
 
-  let publication: any;
+  let publicationText: string = "";
+  let publication: Pub = {
+    Publications: [
+      {
+        id: 0,
+        title: "",
+        mineatura: "",
+        body: "",
+      },
+    ],
+    Size: 0,
+  };
+
   // this is only for get the api
   await fetch(urlApi)
     .then((r) => r.text())
     .then((data) => {
-      publication = data;
+      publicationText = data;
+      publication = JSON.parse(publicationText);
     });
 
-  publication = await JSON.parse(publication);
-
-  let d: HTMLElement = document.getElementById("publications");
+  let d: any = document.getElementById("publications");
   for (let i of publication.Publications) {
     // then add elements into the dom
     let element = `
     <a  class="publications" href="/publication/${i.id}">
-    <div >
-      <div class="head">
-      ${i.title}
+      <div >
+        <div class="head">
+          <h4 align="center">${i.title}</h4>
+          </div>
+            <div class="about" style='background-image:url("${i.mineatura}")'>
+          </div>
       </div>
-      <div class="about" style='background-image:url("${i.mineatura}")'>
+    </a>
       
-    </div>
-      </div>
-      </a>
     `;
-
     d.innerHTML += element;
   }
-  let pagePublications = document.getElementById("pagePublications");
-  for (let i: number = 0; i <= publication.Size / 10; i++) {
+  let pagePublications: any = document.getElementById("pagePublications");
+  for (let i: number = publication.Size / 10; i > 0; i--) {
     let Element: string = `
-    <a class="buttonElementID" href="/${i}">
-      <div >
-        <p> ${i} </p>
-      <div>
-    </a>
+ 
+    <div class="buttonElementID" style="background-color: rgb(255, 255, 255);
+     width:1em;
+    height: 1em;">
+      <a class="buttonElementID" style="background-color: rgb(255, 255, 255);" href="/${Math.round(
+        publication.Size / 10 - i
+      )}" style=" >
+        <div class="buttonElementID" style="  
+        
+        text-decoration: none;
+        color:rgb(0, 0, 0);
+        display:inline-block;
+        width:10px;
+        height: 10px;
+        " >
+          <h4 > ${Math.round(publication.Size / 10 - i) + 1} </h4>
+        </div>
+      </a>
+    </div >
     `;
+
     pagePublications.innerHTML += Element;
-    console.log(i);
+    console.log(Math.round(publication.Size / 10 - i) + 1);
   }
   console.log(publication);
 }

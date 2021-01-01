@@ -7,8 +7,9 @@
     
     <link rel="stylesheet" href="/public/style/prism.css">
     <link rel="stylesheet" href="/public/style/style.css">
-    <script src="/public/script/prism.js"></script>
     <script src="/public/script/post.js"></script>
+    <script src="/public/script/prism.js"></script>
+    
 </head>
 <body>
   <h2>
@@ -47,7 +48,7 @@ document.getElementById('inputfile')
     var fr=new FileReader(); 
     fr.onload=function(){ 
         document.getElementById('body') 
-                .textContent=fr.result; 
+                .innerText=fr.result; 
     } 
       
     fr.readAsText(this.files[0]); 
