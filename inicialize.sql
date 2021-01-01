@@ -6,7 +6,7 @@ CREATE DATABASE publications
 CREATE TABLE publ
 (
     id SERIAL PRIMARY KEY,
-    titulo VARCHAR(40),
-    mineatura VARCHAR(100),
-    body VARCHAR(8000)
+    titulo VARCHAR(40) NOT NULL,
+    mineatura VARCHAR(100) NOT NULL,
+    body VARCHAR(8000) NOT NULL
 );
