@@ -29,16 +29,31 @@ async function NewPublications() {
     // then add elements into the dom
     let element = `
     <a  class="publications" href="/publication/${i.id}">
-    <div class="publications">
-    
-      <h2>${i.title}</h2>
-      <img height =300 src= "${i.mineatura}">
-    
+    <div >
+      <div class="head">
+      <h2 align="center">${i.title}</h2>
+      </div>
+      <div class="about" style='background-image:url("${i.mineatura}")'>
+      
+    </div>
       </div>
       </a>
     `;
 
     d.innerHTML += element;
   }
+  let pagePublications = document.getElementById("pagePublications");
+  for (let i: number = 0; i <= publication.Size / 10; i++) {
+    let Element: string = `
+    <a class="buttonElementID" href="/${i}">
+      <div >
+        <p> ${i} </p>
+      <div>
+    </a>
+    `;
+    pagePublications.innerHTML += Element;
+    console.log(i);
+  }
+  console.log(publication);
 }
 NewPublications();

@@ -86,7 +86,8 @@ func newPost(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
 	case "POST":
 		// i need to do some data bases for do this
-		fmt.Println("someone is trying to post something")
+
+		fmt.Println(r.Header.Get("x-forwarded-for"))
 
 		var d document
 		m := bodyRequest(r)
