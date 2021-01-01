@@ -1,9 +1,10 @@
-function sendDocument(): void {
+async function sendDocument() {
   let [title, mineatura, body]: HTMLElement[] = [
     document.getElementById("titulo"),
     document.getElementById("mineatura"),
     document.getElementById("body"),
   ];
+  console.log(body, title, mineatura);
   if (!title.innerText || !mineatura.innerText || !body.innerText) {
     alert("you need to define everything");
     return;

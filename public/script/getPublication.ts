@@ -1,13 +1,3 @@
-interface infoDocument {
-  id: number;
-  title: string;
-  mineatura: string;
-  bodyOfDocument: string;
-}
-interface Api {
-  Publications: infoDocument[];
-}
-
 async function NewPublications() {
   let urlApi: string =
     "api" +
@@ -31,7 +21,7 @@ async function NewPublications() {
     <a  class="publications" href="/publication/${i.id}">
     <div >
       <div class="head">
-      <h2 align="center">${i.title}</h2>
+      ${i.title}
       </div>
       <div class="about" style='background-image:url("${i.mineatura}")'>
       

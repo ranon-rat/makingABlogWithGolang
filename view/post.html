@@ -28,14 +28,35 @@ miniature(here you need to upload a url )
     <h2>
         body
     </h2>
-    <pre class=" language-md">
-    <div class=" language-md" id="body" contenteditable="true">
+    
+    <div class="contenedor language-md" id="body" contenteditable="true">
     </div>
-    </pre>
+    <button onclick="sendDocument()">
+        send 
+    </button>
+    <input type="file" name="inputfile"
+    id="inputfile"> 
+<br> 
 
-  <p>
-      <button onclick="sendDocument()"> send</button>
-  </p>
+ 
+
+<script type="text/javascript"> 
+document.getElementById('inputfile') 
+    .addEventListener('change', function() { 
+      
+    var fr=new FileReader(); 
+    fr.onload=function(){ 
+        document.getElementById('body') 
+                .textContent=fr.result; 
+    } 
+      
+    fr.readAsText(this.files[0]); 
+}) 
+</script> 
+   
+    
+      
+
     
 </body>
 </html>
