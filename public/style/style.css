@@ -4,6 +4,51 @@ body{
     font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
 }
 
+
+h1{
+    font-size:9em;
+}
+pre{
+   width:98%;
+   border-radius: 10px;
+   background-color:#2d2d2d;
+
+   
+}
+code{
+    
+    background-color:#2d2d2d;
+}
+div{
+    margin-top:10px;
+}
+
+table{
+
+    width: 100%;
+    border-spacing: 0;
+}
+
+
+th, td,tbody,thead {
+    border:1px solid #3b434b;
+    border-spacing: 0;
+    padding: 6px 13px;
+
+}
+td{
+    text-align:center;
+}
+.contenedor{
+    border-style:solid;
+
+  
+}
+
+.publications {
+    color:white;
+    text-decoration: none;
+}
 #navegationVar {
 
     list-style-type: none;
@@ -30,40 +75,6 @@ body{
     background-color: #111;
     color:white;
 }
-h1{
-    font-size:9em;
-}
-pre{
-   width:98%;
-   border-radius: 10px;
-   background-color:#2d2d2d;
-
-   
-}
-code{
-    
-    background-color:#2d2d2d;
-}
-div{
-    margin-top:10px;
-}
-.contenedor{
-    border-style:solid;
-  
-}
-table{
-
-    width: 100%;
-    border-spacing: 0;
-}
-
-
-th, td,tbody,thead {
-    border:1px solid #3b434b;
-    border-spacing: 0;
-    padding: 6px 13px;
-
-}
-td{
-    text-align:center;
+#body{
+    border-style:none;
 }

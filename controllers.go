@@ -32,11 +32,11 @@ func renderMarkdown(p chan document, id int) {
 	parser := parser.NewWithExtensions(extensions)
 	// for now im doing this
 	// but i want to use this with a db
-	var d publications
+
 	d, err := getPublications(id, id)
 
 	if err != nil || len(d.Publications) <= 0 {
-		fmt.Println(err)
+
 		fmt.Println(d)
 		log.Println("something is wrong")
 		p <- document{Title: "sorry but something is wrong", Body: "<h1> something wrong </h1>"}
@@ -53,7 +53,7 @@ func renderInfo(w http.ResponseWriter, r *http.Request) {
 	attr := mux.Vars(r)
 	id, err := strconv.Atoi(attr["id"])
 	if err != nil {
-		fmt.Println("fuck ")
+		log.Println("fuck ", err)
 		w.Write([]byte("sorry but agioue ´"))
 		return
 	}
@@ -73,6 +73,9 @@ func renderInfo(w http.ResponseWriter, r *http.Request) {
 func check(c chan bool, d document, w http.ResponseWriter) {
 
 	_, err := http.Get(d.Mineatura)
+
+	fmt.Println(err)
+	fmt.Println(d.Body == "", d.Title == "", d.Mineatura == "", len(d.Body) >= 100000, len(d.Title) >= 50, len(d.Mineatura) >= 100, err != nil)
 	c <- d.Body == "" || d.Title == "" || d.Mineatura == "" || len(d.Body) >= 100000 || len(d.Title) >= 50 || len(d.Mineatura) >= 100 || err != nil
 
 }
@@ -91,7 +94,7 @@ func newPost(w http.ResponseWriter, r *http.Request) {
 		cont := make(chan bool)
 		go check(cont, d, w)
 		if <-cont {
-			fmt.Println("fuck")
+			log.Println("fuck")
 			return
 		}
 
@@ -113,21 +116,28 @@ func newPost(w http.ResponseWriter, r *http.Request) {
 // this is the api
 func api(w http.ResponseWriter, r *http.Request) {
 	// only send this
+
 	min, err := strconv.Atoi(mux.Vars(r)["page"])
 	if err != nil {
-		log.Println("something is wrong")
+		log.Println("something is wrong", err)
 		return
 	}
 
 	max := (min * 10) + 10
 
-	var a publications
-
-	a, _ = getPublications(min*10, max)
+	a, err := getPublications(min*10, max)
+	if err != nil {
+		w.Write([]byte("nothing find"))
+		return
+	}
+	a.Size, err = getTheSizeOfTheQuery()
+	if err != nil {
+		log.Println(err.Error())
+	}
 
 	b, err := json.Marshal(a)
 	if err != nil {
-		log.Println("something is wrong")
+		log.Println("something is wrong", err)
 		return
 	}
 

@@ -1,13 +1,11 @@
 package main
 
-import (
-	"fmt"
-)
+import "log"
 
 // y el main obviamente
 func main() {
 
-	fmt.Println("starting server")
+	log.Println("starting server")
 	routes()
 
 }

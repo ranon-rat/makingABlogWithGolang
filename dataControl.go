@@ -13,9 +13,10 @@ type document struct {
 	ID        int    `json:"id"`
 	Title     string `json:"title"`
 	Mineatura string `json:"mineatura"`
-	Body      string `json:"body"`
+	Body      string `json:"bodyOfDocument"`
 }
 type publications struct {
+	Size         int
 	Publications []document
 }
 
@@ -62,23 +63,48 @@ func getPublications(min, max int) (publications, error) {
 	m, err := db.Query(q) // envia esto y la salida deb de ser la siguiente
 	if err != nil {
 		fmt.Println(err) // solo por si hay un error xd
-		return publications{}, nil
+
+		return publications{}, err
 	}
 	defer m.Close() // espera a cerrar el canal ( por razones de seguridad)
 
 	var pubs publications
 	for m.Next() {
 		// repasa la informacion,
-		var p document
+		var d document
 		// cambia los valores de publication
-		err := m.Scan(&p.ID, &p.Title, &p.Mineatura, &p.Body)
+		err := m.Scan(&d.ID, &d.Title, &d.Mineatura, &d.Body)
 		if err != nil {
 			// en caso de que haya un error
+
 			log.Println("fuck", err)
+			return publications{}, err
 		}
-		pubs.Publications = append(pubs.Publications, p)
+		pubs.Publications = append(pubs.Publications, d)
 		// los agrega a una listaa
 	}
 
 	return pubs, nil
+}
+func getTheSizeOfTheQuery() (int, error) {
+	q := `SELECT id FROM publ
+	ORDER BY id DESC
+	LIMIT 1;`
+	var dataSize int
+	db := getConnection()
+	defer db.Close()
+	m, err := db.Query(q)
+	if err != nil {
+		return 0, err
+	}
+	defer m.Close()
+	for m.Next() {
+
+		err = m.Scan(&dataSize)
+		if err != nil {
+			return 0, err
+		}
+
+	}
+	return dataSize, nil
 }
