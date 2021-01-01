@@ -14,7 +14,7 @@ func routes() {
 	r.HandleFunc("/admin/postfile", newPost)
 	r.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		number, err := getTheSizeOfTheQuery()
-		if err != nil {
+		if err != nil || number <= 0 {
 			w.Write([]byte("something is wrong sorry"))
 			return
 		}
