@@ -75,7 +75,7 @@ func renderInfo(w http.ResponseWriter, r *http.Request) {
 func check(c chan bool, d document, w http.ResponseWriter) {
 
 	_, err := http.Get(d.Mineatura)
-	log.Println(d, err.Error())
+	log.Println(d, err)
 
 	c <- d.Body == "" || d.Title == "" || d.Mineatura == "" || len(d.Body) >= 100000 || len(d.Title) >= 50 || len(d.Mineatura) >= 100 || err != nil
 
