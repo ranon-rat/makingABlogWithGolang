@@ -21,6 +21,7 @@ async function sendDocument() {
     f.bodyOfDocument.length >= 100000
   ) {
     alert("sorry but is too bigger for send that to the server");
+    return;
   }
 
   fetch(window.location.pathname, {
