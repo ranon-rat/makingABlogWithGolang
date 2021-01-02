@@ -35,24 +35,25 @@ async function NewPublications() {
     });
 
   let d: any = document.getElementById("publications");
-  for (let i of publication.Publications) {
+  for (let i: number = publication.Publications.length - 1; i >= 0; i--) {
     // then add elements into the dom
     let element = `
-    <a  class="publications" href="/publication/${i.id}">
+    <a  class="publications" href="/publication/${publication.Publications[i].id}">
       <div >
         <div class="head">
-          <h4 align="center">${i.title}</h4>
+          <h4 align="center">${publication.Publications[i].title}</h4>
           </div>
-            <div class="about" style='background-image:url("${i.mineatura}")'>
+            <div class="about" style='background-image:url("${publication.Publications[i].mineatura}")'>
           </div>
       </div>
     </a>
       
     `;
+    console.log(publication.Publications[i]);
     d.innerHTML += element;
   }
   let pagePublications: any = document.getElementById("pagePublications");
-  for (let i: number = publication.Size / 10; i > 0; i--) {
+  for (let i: number = publication.Size / 10; i >= 0; i--) {
     let Element: string = `
  
     <div class="buttonElementID" style="background-color: rgb(255, 255, 255);
