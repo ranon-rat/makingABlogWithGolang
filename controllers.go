@@ -51,6 +51,7 @@ func renderMarkdown(p chan document, id int) {
 }
 func renderInfo(w http.ResponseWriter, r *http.Request) {
 	attr := mux.Vars(r)
+	// get the id of the publication
 	id, err := strconv.Atoi(attr["id"])
 	if err != nil {
 		log.Println("fuck ", err)
@@ -58,6 +59,7 @@ func renderInfo(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	p := make(chan document)
+	// then decode the markdown to html
 	go renderMarkdown(p, id)
 	t, err := template.ParseFiles("view/template.html")
 	if err != nil {
@@ -73,9 +75,8 @@ func renderInfo(w http.ResponseWriter, r *http.Request) {
 func check(c chan bool, d document, w http.ResponseWriter) {
 
 	_, err := http.Get(d.Mineatura)
-
-	fmt.Println(err)
-	fmt.Println(d.Body == "", d.Title == "", d.Mineatura == "", len(d.Body) >= 100000, len(d.Title) >= 50, len(d.Mineatura) >= 100, err != nil)
+	log.Println(d)
+	log.Println(d.Body == "", d.Title == "", d.Mineatura == "", len(d.Body) >= 100000, len(d.Title) >= 50, len(d.Mineatura) >= 100, err != nil)
 	c <- d.Body == "" || d.Title == "" || d.Mineatura == "" || len(d.Body) >= 100000 || len(d.Title) >= 50 || len(d.Mineatura) >= 100 || err != nil
 
 }
@@ -87,18 +88,19 @@ func newPost(w http.ResponseWriter, r *http.Request) {
 	case "POST":
 		// i need to do some data bases for do this
 
-		fmt.Println(r.Header.Get("x-forwarded-for"))
-
+		fmt.Println(r.Header.Get("x-forwarded-for")) // in the future i gona do something with this
 		var d document
 		m := bodyRequest(r)
+		// decode the bodyRequest
 		json.Unmarshal([]byte(m), &d)
 		cont := make(chan bool)
+		// this is for check if something is wrong
 		go check(cont, d, w)
 		if <-cont {
 			log.Println("fuck")
 			return
 		}
-
+		// add the publications
 		go addPublication(d)
 		fmt.Println("yes")
 		break
@@ -117,31 +119,35 @@ func newPost(w http.ResponseWriter, r *http.Request) {
 // this is the api
 func api(w http.ResponseWriter, r *http.Request) {
 	// only send this
-
+	// this is for get the id
 	min, err := strconv.Atoi(mux.Vars(r)["page"])
 	if err != nil {
 		log.Println("something is wrong", err)
+		w.Write([]byte("something is wrong"))
 		return
 	}
-
 	max := (min * 10) + 10
 
 	a, err := getPublications(min*10, max)
+	// this is for get 10 publications
 	if err != nil {
+		// if we cant find  this send this
 		w.Write([]byte("nothing find"))
 		return
 	}
 	a.Size, err = getTheSizeOfTheQuery()
+	// this is for get the size of the database
 	if err != nil {
 		log.Println(err.Error())
 	}
 
 	b, err := json.Marshal(a)
+	// encode the json
 	if err != nil {
 		log.Println("something is wrong", err)
 		return
 	}
-
+	// send the json
 	w.Write(b)
 
 }

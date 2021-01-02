@@ -31,8 +31,7 @@ func getConnection() *sql.DB {
 func addPublication(e document) error {
 	q := `INSERT INTO 
 	publ(titulo,mineatura,body) 
-	values($1,$2,$3)
-	
+	values($1,$2,$3);
 	`
 	db := getConnection()
 	defer db.Close()
@@ -55,7 +54,7 @@ func addPublication(e document) error {
 }
 func getPublications(min, max int) (publications, error) {
 	// este es el consultorio croe que se llamaba asi , ya no me acuerdo xd
-	q := fmt.Sprintf("SELECT * FROM publ WHERE id <=%d AND id>=%d", max, min)
+	q := fmt.Sprintf("SELECT * FROM publ WHERE id <=%d AND id>=%d;", max, min)
 	db := getConnection()
 	// aqui lo que hace es conectarse a la base de datos
 	defer db.Close()
@@ -89,7 +88,7 @@ func getPublications(min, max int) (publications, error) {
 func getTheSizeOfTheQuery() (int, error) {
 	q := `SELECT id FROM publ
 	ORDER BY id DESC
-	LIMIT 1;`
+	LIMIT 1;` // this only get the last element and then send it
 	var dataSize int
 	db := getConnection()
 	defer db.Close()
@@ -104,7 +103,6 @@ func getTheSizeOfTheQuery() (int, error) {
 		if err != nil {
 			return 0, err
 		}
-
 	}
 	return dataSize, nil
 }

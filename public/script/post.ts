@@ -1,36 +1,38 @@
+interface Formulario {
+  title: any;
+  mineatura: any;
+  bodyOfDocument: any;
+}
+
 async function sendDocument() {
-  let [title, mineatura, body]: any[] = [
-    document.getElementById("titulo"),
-    document.getElementById("mineatura"),
-    document.getElementById("body"),
-  ];
-  console.log(body, title, mineatura);
-  if (!title.innerText || !mineatura.innerText || !body.innerText) {
+  let f: Formulario = {
+    title: document.getElementById("titulo")?.innerText,
+    mineatura: document.getElementById("mineatura")?.innerText,
+    bodyOfDocument: document.getElementById("body")?.innerText,
+  };
+
+  if (!f.title || !f.mineatura || !f.bodyOfDocument) {
     alert("you need to define everything");
     return;
   }
   if (
-    title.innerText.length >= 50 ||
-    mineatura.innerText.length >= 100 ||
-    body.innerText.length >= 100000
+    f.title.length >= 50 ||
+    f.mineatura.length >= 100 ||
+    f.bodyOfDocument.length >= 100000
   ) {
     alert("sorry but is too bigger for send that to the server");
   }
 
   fetch(window.location.pathname, {
     method: "POST",
-    body: JSON.stringify({
-      title: title.innerText,
-      mineatura: mineatura.innerText,
-      bodyOfDocument: body.innerText,
-    }),
+    body: JSON.stringify(f),
     headers: {
       "Content-Type": "application/json",
     },
   });
-  console.log(title.innerText, mineatura.innerText, body.innerText);
+  document.getElementById("titulo")?.innerText = "";
+  document.getElementById("mineatura").innerText = "";
+  document.getElementById("body").innerText = "";
 
-  title.innerText = "";
-  mineatura.innerText = "";
-  body.innerText = "";
+  console.log(f);
 }

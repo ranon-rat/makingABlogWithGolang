@@ -4,60 +4,35 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Post</title>
-    
-    <link rel="stylesheet" href="/public/style/prism.css">
+
     <link rel="stylesheet" href="/public/style/style.css">
     <script src="/public/script/post.js"></script>
-    <script src="/public/script/prism.js"></script>
+    
     
 </head>
 <body>
-  <h2>
-      well here we go 
-  </h2>
-
-    <h2>
-        title
-    </h2> 
+    <h2>well here we go </h2>
+    <h2>title</h2> 
     <div class ="contenedor" id = "titulo" contenteditable="true"></div>
-    <h2>
-        
-miniature(here you need to upload a url )
-
-    </h2>
+    <h2>miniature(here you need to upload a url )</h2>
     <div class ="contenedor" id= "mineatura" contenteditable="true"></div>
-    <h2>
-        body
-    </h2>
-    
+    <h2>body</h2>
     <div class="contenedor language-md" id="body" contenteditable="true">
     </div>
-    <button onclick="sendDocument()">
-        send 
-    </button>
+    <button onclick="sendDocument()">send </button>
     <input type="file" name="inputfile"
     id="inputfile"> 
 <br> 
-
- 
-
 <script type="text/javascript"> 
 document.getElementById('inputfile') 
     .addEventListener('change', function() { 
-      
     var fr=new FileReader(); 
     fr.onload=function(){ 
         document.getElementById('body') 
                 .innerText=fr.result; 
     } 
-      
     fr.readAsText(this.files[0]); 
 }) 
-</script> 
-   
-    
-      
-
-    
+</script>    
 </body>
 </html>
