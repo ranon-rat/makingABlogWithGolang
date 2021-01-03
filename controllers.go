@@ -108,7 +108,6 @@ func newPost(w http.ResponseWriter, r *http.Request) {
 		break
 	case "GET":
 		http.ServeFile(w, r, "view/post.html")
-		w.Write([]byte("lmao you are trying to get the page"))
 		break
 	default:
 		// solo acepta 2 metodos de request
