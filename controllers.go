@@ -119,20 +119,7 @@ func newPost(w http.ResponseWriter, r *http.Request) {
 }
 
 // this is the api
-func publicationComunication(w http.ResponseWriter, aChan chan publications, errChan chan error) {
-	err := <-errChan
-	if err != nil {
-		w.Write([]byte("nothing find"))
-		return
-	}
-	a := <-aChan
-	a.Size, err = getTheSizeOfTheQuery()
-	// this is for get the size of the database
-	if err != nil {
-		log.Println(err.Error())
-	}
-	aChan <- a
-}
+
 func api(w http.ResponseWriter, r *http.Request) {
 	// only send this
 	// this is for use the apis
@@ -146,7 +133,20 @@ func api(w http.ResponseWriter, r *http.Request) {
 	//the db management
 	aChan, errChan := make(chan publications), make(chan error)
 	go getPublications(min*10, max, aChan, errChan)
-	go publicationComunication(w, aChan, errChan)
+	go func(w http.ResponseWriter, aChan chan publications, errChan chan error) {
+		err := <-errChan
+		if err != nil {
+			w.Write([]byte("nothing find"))
+			return
+		}
+		a := <-aChan
+		a.Size, err = getTheSizeOfTheQuery()
+		// this is for get the size of the database
+		if err != nil {
+			log.Println(err.Error())
+		}
+		aChan <- a
+	}(w, aChan, errChan)
 
 	// decode the json
 	b, err := json.Marshal(<-aChan)
