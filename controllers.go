@@ -75,12 +75,9 @@ func renderInfo(w http.ResponseWriter, r *http.Request) {
 
 // this only is for the styles and script
 func check(c chan bool, d document, w http.ResponseWriter) {
-
 	_, err := http.Get(d.Mineatura)
 	log.Println(d, err)
-
 	c <- d.Body == "" || d.Title == "" || d.Mineatura == "" || len(d.Body) >= 100000 || len(d.Title) >= 50 || len(d.Mineatura) >= 100 || err != nil
-
 }
 
 // this is the post manager , with this you can do really interesting things
@@ -104,7 +101,7 @@ func newPost(w http.ResponseWriter, r *http.Request) {
 		}
 		// add the publications
 		go addPublication(d)
-		fmt.Println("yes")
+
 		break
 	case "GET":
 		http.ServeFile(w, r, "view/post.html")
@@ -130,8 +127,12 @@ func api(w http.ResponseWriter, r *http.Request) {
 	max := (min * 10) + 10
 	// concurrency communication
 	//the db management
+
 	aChan, errChan := make(chan publications), make(chan error)
+
 	go getPublications(min*10, max, aChan, errChan)
+
+	// we use this function only one time so, im only usign a anon function 😩
 	go func(w http.ResponseWriter, aChan chan publications, errChan chan error) {
 		err := <-errChan
 		if err != nil {
@@ -143,6 +144,9 @@ func api(w http.ResponseWriter, r *http.Request) {
 		// this is for get the size of the database
 		if err != nil {
 			log.Println(err.Error())
+			aChan <- <-aChan
+			return
+
 		}
 		aChan <- a
 	}(w, aChan, errChan)
@@ -153,6 +157,7 @@ func api(w http.ResponseWriter, r *http.Request) {
 		log.Println("something is wrong", err)
 		return
 	}
+
 	// send the json
 	w.Write(b)
 
