@@ -127,15 +127,13 @@ func api(w http.ResponseWriter, r *http.Request) {
 	max := (min * 10) + 10
 	// concurrency communication
 	//the db management
-
 	aChan, errChan := make(chan publications), make(chan error)
-
 	go getPublications(min*10, max, aChan, errChan)
-
 	// we use this function only one time so, im only usign a anon function 😩
 	go func(w http.ResponseWriter, aChan chan publications, errChan chan error) {
 		err := <-errChan
 		if err != nil {
+
 			w.Write([]byte("nothing find"))
 			return
 		}
@@ -150,7 +148,6 @@ func api(w http.ResponseWriter, r *http.Request) {
 		}
 		aChan <- a
 	}(w, aChan, errChan)
-
 	// decode the json
 	b, err := json.Marshal(<-aChan)
 	if err != nil {
