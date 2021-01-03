@@ -14,7 +14,7 @@ async function NewPublications() {
     window.location.pathname.split("/")[window.location.pathname.length - 1];
 
   let publicationText: string = "";
-  let publication: Pub = {
+  let publication: Pub | string = {
     Publications: [
       {
         id: 0,
@@ -30,8 +30,8 @@ async function NewPublications() {
   await fetch(urlApi)
     .then((r) => r.text())
     .then((data) => {
-      publicationText = data;
-      publication = JSON.parse(publicationText);
+      publication = data;
+      publication = JSON.parse(publication);
     });
 
   let d: any = document.getElementById("publications");

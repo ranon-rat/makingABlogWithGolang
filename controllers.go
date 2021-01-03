@@ -26,14 +26,14 @@ func bodyRequest(r *http.Request) string {
 	return newStr
 }
 
-func renderMarkdown(p chan document, id int) {
+func renderMarkdown(p chan document, publicationChan chan publications, errChan chan error) {
 	// lo que hace es parsear el markdown en html
 	extensions := parser.CommonExtensions | parser.AutoHeadingIDs
 	parser := parser.NewWithExtensions(extensions)
 	// for now im doing this
 	// but i want to use this with a db
 
-	d, err := getPublications(id, id)
+	d, err := <-publicationChan, <-errChan
 
 	if err != nil || len(d.Publications) <= 0 {
 
@@ -60,7 +60,9 @@ func renderInfo(w http.ResponseWriter, r *http.Request) {
 	}
 	p := make(chan document)
 	// then decode the markdown to html
-	go renderMarkdown(p, id)
+	d, errChan := make(chan publications), make(chan error)
+	go getPublications(id, id, d, errChan)
+	go renderMarkdown(p, d, errChan)
 	t, err := template.ParseFiles("view/template.html")
 	if err != nil {
 		w.Write([]byte(err.Error()))
@@ -117,32 +119,37 @@ func newPost(w http.ResponseWriter, r *http.Request) {
 }
 
 // this is the api
-func api(w http.ResponseWriter, r *http.Request) {
-	// only send this
-	// this is for get the id
-	min, err := strconv.Atoi(mux.Vars(r)["page"])
+func publicationComunication(w http.ResponseWriter, aChan chan publications, errChan chan error) {
+	err := <-errChan
 	if err != nil {
-		log.Println("something is wrong", err)
-		w.Write([]byte("something is wrong"))
-		return
-	}
-	max := (min * 10) + 10
-
-	a, err := getPublications(min*10, max)
-	// this is for get 10 publications
-	if err != nil {
-		// if we cant find  this send this
 		w.Write([]byte("nothing find"))
 		return
 	}
+	a := <-aChan
 	a.Size, err = getTheSizeOfTheQuery()
 	// this is for get the size of the database
 	if err != nil {
 		log.Println(err.Error())
 	}
+	aChan <- a
+}
+func api(w http.ResponseWriter, r *http.Request) {
+	// only send this
+	// this is for use the apis
+	min, err := strconv.Atoi(mux.Vars(r)["page"])
+	if err != nil {
+		w.Write([]byte("something is wrong"))
+		return
+	}
+	max := (min * 10) + 10
+	// concurrency communication
+	//the db management
+	aChan, errChan := make(chan publications), make(chan error)
+	go getPublications(min*10, max, aChan, errChan)
+	go publicationComunication(w, aChan, errChan)
 
-	b, err := json.Marshal(a)
-	// encode the json
+	// decode the json
+	b, err := json.Marshal(<-aChan)
 	if err != nil {
 		log.Println("something is wrong", err)
 		return

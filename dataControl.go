@@ -52,7 +52,7 @@ func addPublication(e document) error {
 	}
 	return nil
 }
-func getPublications(min, max int) (publications, error) {
+func getPublications(min, max int, pChan chan publications, errChan chan error) {
 	// este es el consultorio croe que se llamaba asi , ya no me acuerdo xd
 	q := fmt.Sprintf("SELECT * FROM publ WHERE id <=%d AND id>=%d;", max, min)
 	db := getConnection()
@@ -61,9 +61,11 @@ func getPublications(min, max int) (publications, error) {
 	//espera a cerrarse para evitar ciertos problemas de seguridad
 	m, err := db.Query(q) // envia esto y la salida deb de ser la siguiente
 	if err != nil {
-		fmt.Println(err) // solo por si hay un error xd
 
-		return publications{}, err
+		pChan <- publications{}
+		errChan <- err
+		log.Println(err)
+		return
 	}
 	defer m.Close() // espera a cerrar el canal ( por razones de seguridad)
 
@@ -74,17 +76,24 @@ func getPublications(min, max int) (publications, error) {
 		// cambia los valores de publication
 		err := m.Scan(&d.ID, &d.Title, &d.Mineatura, &d.Body)
 		if err != nil {
-			// en caso de que haya un error
 
-			log.Println("fuck", err)
-			return publications{}, err
+			pChan <- publications{}
+			errChan <- err
+			fmt.Println(err)
+			return
+
 		}
 		pubs.Publications = append(pubs.Publications, d)
 		// los agrega a una listaa
 	}
 
-	return pubs, nil
+	pChan <- pubs
+	errChan <- nil
+
+	return
 }
+
+// this is for get the size of the table
 func getTheSizeOfTheQuery() (int, error) {
 	q := `SELECT id FROM publ
 	ORDER BY id DESC
@@ -98,7 +107,6 @@ func getTheSizeOfTheQuery() (int, error) {
 	}
 	defer m.Close()
 	for m.Next() {
-
 		err = m.Scan(&dataSize)
 		if err != nil {
 			return 0, err
