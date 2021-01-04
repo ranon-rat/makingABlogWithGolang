@@ -57,6 +57,7 @@ func getPublications(min, max int, pChan chan publications, errChan chan error) 
 	q := fmt.Sprintf(`SELECT * FROM publ 
 	WHERE id<=%d AND id >=%d
 	ORDER BY id DESC ;`, max, min)
+	// aqui lo que hace es ordenar el resultado
 	db := getConnection()
 	// aqui lo que hace es conectarse a la base de datos
 	defer db.Close()

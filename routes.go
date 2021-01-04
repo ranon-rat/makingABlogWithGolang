@@ -10,7 +10,7 @@ import (
 
 func routes() {
 	// aqui solo es para dar la salida de informacion
-	log.Println(getTheSizeOfTheQuery())
+
 	r := mux.NewRouter()
 	// REDIRIJE
 	r.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
@@ -20,6 +20,17 @@ func routes() {
 			w.Write([]byte("something is wrong sorry"))
 			return
 		}
+
+		// hmm por alguna razon no me redirect a la pagina que deseo hmm
+		/*
+			creo que ya se cual es el problema
+			puede que sean por los datos de navegacion y que por
+			defecto te reenvie a la pagina con la que accediste primero por alguna razon
+			puede que sea buena idea  buscar una forma de hacer que borre las cookies
+			si ya cheque , si es problema del navegador 😩. eso no se como solucionarlo :(
+
+		*/
+		// aqui lo que deberia de hacer es obtener el ultimo resultado y enviarlo
 		http.Redirect(w, r, fmt.Sprintf("/%d", number/10), 301)
 	})
 	r.HandleFunc("/{page:[0-9]+}", func(w http.ResponseWriter, r *http.Request) {
@@ -36,5 +47,5 @@ func routes() {
 
 	r.HandleFunc("/publication/{id:[0-9]+}", renderInfo)
 
-	log.Println(http.ListenAndServe(":8080", r))
+	log.Println(http.ListenAndServe(":8090", r))
 }
