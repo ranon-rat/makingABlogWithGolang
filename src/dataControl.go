@@ -53,11 +53,13 @@ func addPublication(e document) error {
 	}
 	return nil
 }
-func getPublications(min, max int, pChan chan publications, errChan chan error) {
+func getPublications(min int, pChan chan publications, errChan chan error) {
 	// este es el consultorio croe que se llamaba asi , ya no me acuerdo xd
-	q := fmt.Sprintf(`SELECT * FROM publ 
-	WHERE id<=%d AND id >=%d
-	ORDER BY id DESC ;`, max, min)
+	q := fmt.Sprintf(`
+	SELECT * FROM publ 
+	WHERE  id >=%d
+	ORDER BY id DESC 
+	LIMIT %d;`, min, cantidad)
 	/*
 		aqui lo que basicamente hace es ordenar del mayor al menor
 	*/

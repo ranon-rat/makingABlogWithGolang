@@ -65,7 +65,7 @@ func renderInfo(w http.ResponseWriter, r *http.Request) {
 	p := make(chan document)
 	// then decode the markdown to html
 	d, errChan := make(chan publications), make(chan error)
-	go getPublications(id, id, d, errChan)
+	go getPublications(id, d, errChan)
 	go renderMarkdown(p, d, errChan)
 	t, err := template.ParseFiles("view/template.html")
 	if err != nil {
@@ -119,24 +119,7 @@ func newPost(w http.ResponseWriter, r *http.Request) {
 }
 
 // this is the ap
-func getTheBodyOfTheAPI(w http.ResponseWriter, aChan chan publications, errChan chan error, min, max int) {
 
-	go getPublications(min, max, aChan, errChan)
-	a, err := <-aChan, <-errChan
-	a.Size, err = getTheSizeOfTheQuery()
-
-	log.Println(a)
-	// this is for get the size of the database
-	if err != nil {
-		log.Println(err.Error(), a.Size)
-		aChan <- a
-
-		return
-	}
-	aChan <- a
-	close(aChan)
-
-}
 func api(w http.ResponseWriter, r *http.Request) {
 	// only send this
 	// this is for use the apis
@@ -145,14 +128,14 @@ func api(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte("something is wrong"))
 		return
 	}
-	max := (min * cantidad) + cantidad
+
 	// concurrency communication
 	//the db management
 	aChan, errChan := make(chan publications), make(chan error)
 
 	// we use this function only one time so, im only usign a anon function 😩
 
-	go getPublications(min, max, aChan, errChan)
+	go getPublications(min, aChan, errChan)
 	a, err := <-aChan, <-errChan
 	a.Cantidad = cantidad
 	if err != nil {
