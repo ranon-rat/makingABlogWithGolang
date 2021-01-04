@@ -49,7 +49,7 @@ td{
     background-size: 100% 100%;
     height: 20em;
 }
-.publicationContent >img{
+.publicationContent img{
 
     float:inline-end;
     height: 8em;
