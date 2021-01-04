@@ -45,8 +45,8 @@ func renderMarkdown(p chan document, publicationChan chan publications, errChan 
 
 	// ya sabe, concurrencia
 	// obtiene el markdown
-	html := string(markdown.ToHTML([]byte(d.Publications[0].Body), parser, nil)) // despues lo pasa a html
-	p <- document{Title: "hello world", Body: html}                              // al final hace lo siguiente
+	d.Publications[0].Body = string(markdown.ToHTML([]byte(d.Publications[0].Body), parser, nil)) // despues lo pasa a html
+	p <- d.Publications[0]                                                                        // al final hace lo siguiente
 
 }
 func renderInfo(w http.ResponseWriter, r *http.Request) {

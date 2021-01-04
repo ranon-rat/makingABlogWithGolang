@@ -3,6 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link  rel="icon"   href={{.Mineatura}} type="image/png" />
+
     <link rel="stylesheet" href="/public/style/prism.css">
     <link rel="stylesheet" href="/public/style/style.css">  
     <script src="/public/script/prism.js"></script>
@@ -28,6 +31,7 @@
      <a href="https://github.com/ranon-rat">
         <img width="30" src="https://ranon-rat.herokuapp.com/image/github.png"></a>
     </li></ul>
+    <h1 id="titulo">{{ .Title}}</h1>
     <article id="content">
         {{ .Body}}
     </article>
