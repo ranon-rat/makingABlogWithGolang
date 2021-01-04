@@ -10,10 +10,7 @@ interface Pub {
 }
 async function NewPublications() {
   let urlApi: string =
-    "api" +
-    "/" +
-    window.location.pathname.split("/")[window.location.pathname.length - 1];
-
+    "api" + "/" + window.location.pathname.replace(/\//gi, "");
   let publication: Pub | string = {
     Publications: [
       {
@@ -69,7 +66,7 @@ async function NewPublications() {
      width:1em;
     height: 1em;">
       <a class="buttonElementID" style="background-color: rgb(255, 255, 255);" href="/${Math.round(
-        publication.Size / publication.Cantidad - i
+        (publication.Size / publication.Cantidad - i) * publication.Cantidad
       )}" style=" >
         <div class="buttonElementID" style="  
         
