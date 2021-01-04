@@ -32,7 +32,7 @@ async function sendDocument() {
     },
   });
   document.getElementById("titulo")?.innerText = "";
-  document.getElementById("mineatura").innerText = "";
+  document.getElementById("mineatura")?.innerText = "";
   document.getElementById("bodyOfMessage")?.value = "";
 
   console.log(f);

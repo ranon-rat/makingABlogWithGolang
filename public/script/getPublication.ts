@@ -42,7 +42,7 @@ async function NewPublications() {
     <a  class="publications" href="/publication/${publication.Publications[i].id}">
       <div >
         <div class="publicationContent">
-        <img src="${publication.Publications[i].mineatura}" > 
+        <img src="${publication.Publications[i].mineatura}"style="height: 8em;" > 
               
         <h4 >
             ${publication.Publications[i].title}
