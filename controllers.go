@@ -154,8 +154,11 @@ func api(w http.ResponseWriter, r *http.Request) {
 	}
 	// por alguna razon no me permitia obtener el tamño de esa manera 🤑
 	a.Size, err = getTheSizeOfTheQuery()
-
-	// decode the json
+	if err != nil {
+		log.Println("something is wrong")
+		w.Write([]byte("sorry but something is wrong"))
+		return
+	}
 	b, err := json.Marshal(a)
 	if err != nil {
 		log.Println("something is wrong", err)
