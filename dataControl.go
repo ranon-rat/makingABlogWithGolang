@@ -16,8 +16,9 @@ type document struct {
 	Body      string `json:"bodyOfDocument"`
 }
 type publications struct {
-	Size         int
-	Publications []document
+	Size         int        `json:"Size"`
+	Publications []document `json:"Publications"`
+	Cantidad     int        `json:"Cantidad"`
 }
 
 func getConnection() *sql.DB {
@@ -58,7 +59,7 @@ func getPublications(min, max int, pChan chan publications, errChan chan error) 
 	WHERE id<=%d AND id >=%d
 	ORDER BY id DESC ;`, max, min)
 	/*
-	aqui lo que basicamente hace es ordenar del mayor al menor
+		aqui lo que basicamente hace es ordenar del mayor al menor
 	*/
 	// aqui lo que hace es ordenar el resultado
 	db := getConnection()
@@ -103,9 +104,9 @@ func getTheSizeOfTheQuery() (int, error) {
 	SELECT MAX(id) 
 	FROM publ
 	`
-	// como no he encontrado muchas maneras de encontrar el 
+	// como no he encontrado muchas maneras de encontrar el
 	//tamaño de una tabla lo que hace aqui es basicamente seleccionar el maximo valor
-	
+
 	var dataSize int
 	db := getConnection()
 	defer db.Close()

@@ -1,4 +1,5 @@
 interface Pub {
+  Cantidad: number;
   Publications: {
     id: number;
     title: string;
@@ -13,7 +14,6 @@ async function NewPublications() {
     "/" +
     window.location.pathname.split("/")[window.location.pathname.length - 1];
 
-  let publicationText: string = "";
   let publication: Pub | string = {
     Publications: [
       {
@@ -24,12 +24,14 @@ async function NewPublications() {
       },
     ],
     Size: 0,
+    Cantidad: 0,
   };
 
   // this is only for get the api
   await fetch(urlApi)
     .then((r) => r.text())
     .then((data) => {
+      console.log(data);
       publication = data;
       publication = JSON.parse(publication);
     });
@@ -60,14 +62,14 @@ async function NewPublications() {
     d.innerHTML += element;
   }
   let pagePublications: any = document.getElementById("pagePublications");
-  for (let i: number = publication.Size / 10; i > 0; i--) {
+  for (let i: number = publication.Size / publication.Cantidad; i > 0; i--) {
     let Element: string = `
  
     <div class="buttonElementID" style="background-color: rgb(255, 255, 255);
      width:1em;
     height: 1em;">
       <a class="buttonElementID" style="background-color: rgb(255, 255, 255);" href="/${Math.round(
-        publication.Size / 10 - i
+        publication.Size / publication.Cantidad - i
       )}" style=" >
         <div class="buttonElementID" style="  
         
@@ -77,7 +79,9 @@ async function NewPublications() {
         width:10px;
         height: 10px;
         " >
-          <h4 > ${Math.round(publication.Size / 10 - i) + 1} </h4>
+          <h4 > ${
+            Math.round(publication.Size / publication.Cantidad - i) + 1
+          } </h4>
         </div>
       </a>
     </div >

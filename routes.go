@@ -33,17 +33,14 @@ func routes() {
 		*/
 		// aqui lo que deberia de hacer es obtener el ultimo resultado y enviarlo
 
-		http.Redirect(w, r, fmt.Sprintf("/%d", number/10), 301)
+		http.Redirect(w, r, fmt.Sprintf("/%d", number/cantidad), 301)
 	})
 	r.HandleFunc("/{page:[0-9]+}", func(w http.ResponseWriter, r *http.Request) {
 
 		http.ServeFile(w, r, "view/home.html")
 	})
 	r.HandleFunc("/public/{directory+}", func(w http.ResponseWriter, r *http.Request) {
-		ruta := strings.ReplaceAll(r.URL.Path, "&", "/")[1:]
-		fmt.Println(ruta)
-		http.ServeFile(w, r, ruta)
-
+		http.ServeFile(w, r, strings.ReplaceAll(r.URL.Path, "&", "/")[1:])
 	})
 
 	r.HandleFunc("/admin/postfile", newPost)

@@ -15,6 +15,10 @@ import (
 	"github.com/gorilla/mux"
 )
 
+const (
+	cantidad int = 20
+)
+
 func bodyRequest(r *http.Request) string {
 	body, _ := ioutil.ReadAll(r.Body)
 	// aqui lo que haces es pasar el body a un string para despues pasarlo a un json
@@ -117,9 +121,10 @@ func newPost(w http.ResponseWriter, r *http.Request) {
 // this is the ap
 func getTheBodyOfTheAPI(w http.ResponseWriter, aChan chan publications, errChan chan error, min, max int) {
 
-	go getPublications(min*10, max, aChan, errChan)
+	go getPublications(min, max, aChan, errChan)
 	a, err := <-aChan, <-errChan
 	a.Size, err = getTheSizeOfTheQuery()
+
 	log.Println(a)
 	// this is for get the size of the database
 	if err != nil {
@@ -140,15 +145,16 @@ func api(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte("something is wrong"))
 		return
 	}
-	max := (min * 10) + 10
+	max := (min * cantidad) + cantidad
 	// concurrency communication
 	//the db management
 	aChan, errChan := make(chan publications), make(chan error)
 
 	// we use this function only one time so, im only usign a anon function 😩
 
-	go getPublications(min*10, max, aChan, errChan)
+	go getPublications(min, max, aChan, errChan)
 	a, err := <-aChan, <-errChan
+	a.Cantidad = cantidad
 	if err != nil {
 		log.Println("fuck", err)
 	}
