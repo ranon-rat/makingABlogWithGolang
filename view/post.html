@@ -17,7 +17,9 @@
     <h2>miniature(here you need to upload a url )</h2>
     <div class ="contenedor" id= "mineatura" contenteditable="true"></div>
     <h2>body</h2>
-    <div class="contenedor language-md" id="body" contenteditable="true">
+    <p>
+    <textarea class="contenedor language-md" id="bodyOfMessage" name="subject" style="color:#000;height:20em" placeholder="Write something.." ></textarea>
+  </p>
     </div>
     <button onclick="sendDocument()">send </button>
     <input type="file" name="inputfile"
@@ -28,8 +30,7 @@ document.getElementById('inputfile')
     .addEventListener('change', function() { 
     var fr=new FileReader(); 
     fr.onload=function(){ 
-        document.getElementById('body') 
-                .innerText=fr.result; 
+        document.getElementById('bodyOfMessage').value=fr.result; 
     } 
     fr.readAsText(this.files[0]); 
 }) 
