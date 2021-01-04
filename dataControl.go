@@ -54,7 +54,9 @@ func addPublication(e document) error {
 }
 func getPublications(min, max int, pChan chan publications, errChan chan error) {
 	// este es el consultorio croe que se llamaba asi , ya no me acuerdo xd
-	q := fmt.Sprintf("SELECT * FROM publ WHERE id <=%d AND id>=%d;", max, min)
+	q := fmt.Sprintf(`SELECT * FROM publ 
+	WHERE id<=%d AND id >=%d
+	ORDER BY id DESC ;`, max, min)
 	db := getConnection()
 	// aqui lo que hace es conectarse a la base de datos
 	defer db.Close()
@@ -93,7 +95,10 @@ func getPublications(min, max int, pChan chan publications, errChan chan error) 
 
 // this is for get the size of the table
 func getTheSizeOfTheQuery() (int, error) {
-	q := `SELECT MAX(id) FROM publ` // this only get the last element and then send it
+	q := `
+	SELECT MAX(id) 
+	FROM publ
+	`
 	var dataSize int
 	db := getConnection()
 	defer db.Close()
@@ -103,10 +108,12 @@ func getTheSizeOfTheQuery() (int, error) {
 	}
 	defer m.Close()
 	for m.Next() {
+
 		err = m.Scan(&dataSize)
 		if err != nil {
 			return 0, err
 		}
+
 	}
 	return dataSize, nil
 }

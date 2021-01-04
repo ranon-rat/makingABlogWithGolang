@@ -114,8 +114,24 @@ func newPost(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("something")
 }
 
-// this is the api
+// this is the ap
+func getTheBodyOfTheAPI(w http.ResponseWriter, aChan chan publications, errChan chan error, min, max int) {
 
+	go getPublications(min*10, max, aChan, errChan)
+	a, err := <-aChan, <-errChan
+	a.Size, err = getTheSizeOfTheQuery()
+	log.Println(a)
+	// this is for get the size of the database
+	if err != nil {
+		log.Println(err.Error(), a.Size)
+		aChan <- a
+
+		return
+	}
+	aChan <- a
+	close(aChan)
+
+}
 func api(w http.ResponseWriter, r *http.Request) {
 	// only send this
 	// this is for use the apis
@@ -128,28 +144,19 @@ func api(w http.ResponseWriter, r *http.Request) {
 	// concurrency communication
 	//the db management
 	aChan, errChan := make(chan publications), make(chan error)
-	go getPublications(min*10, max, aChan, errChan)
+
 	// we use this function only one time so, im only usign a anon function 😩
-	go func(w http.ResponseWriter, aChan chan publications, errChan chan error) {
-		err := <-errChan
-		if err != nil {
 
-			w.Write([]byte("nothing find"))
-			return
-		}
-		a := <-aChan
-		a.Size, err = getTheSizeOfTheQuery()
-		// this is for get the size of the database
-		if err != nil {
-			log.Println(err.Error())
-			aChan <- <-aChan
-			return
+	go getPublications(min*10, max, aChan, errChan)
+	a, err := <-aChan, <-errChan
+	if err != nil {
+		log.Println("fuck", err)
+	}
+	// por alguna razon no me permitia obtener el tamño de esa manera 🤑
+	a.Size, err = getTheSizeOfTheQuery()
 
-		}
-		aChan <- a
-	}(w, aChan, errChan)
 	// decode the json
-	b, err := json.Marshal(<-aChan)
+	b, err := json.Marshal(a)
 	if err != nil {
 		log.Println("something is wrong", err)
 		return
