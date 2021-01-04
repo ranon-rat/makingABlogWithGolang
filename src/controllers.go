@@ -30,7 +30,7 @@ func bodyRequest(r *http.Request) string {
 	return newStr
 }
 
-func renderMarkdown(p chan document, publicationChan chan publications, errChan chan error) {
+func renderMarkdown(p chan document, publicationChan chan document, errChan chan error) {
 	// lo que hace es parsear el markdown en html
 	extensions := parser.CommonExtensions | parser.AutoHeadingIDs
 	parser := parser.NewWithExtensions(extensions)
@@ -38,19 +38,15 @@ func renderMarkdown(p chan document, publicationChan chan publications, errChan 
 	// but i want to use this with a db
 
 	d, err := <-publicationChan, <-errChan
-
-	if err != nil || len(d.Publications) <= 0 {
-
-		fmt.Println(d)
-		log.Println("something is wrong")
-		p <- document{Title: "sorry but something is wrong", Body: "<h1> something wrong </h1>"}
+	if err != nil {
+		p <- d
+		log.Println(err)
 		return
 	}
-
 	// ya sabe, concurrencia
 	// obtiene el markdown
-	d.Publications[0].Body = string(markdown.ToHTML([]byte(d.Publications[0].Body), parser, nil)) // despues lo pasa a html
-	p <- d.Publications[0]                                                                        // al final hace lo siguiente
+	d.Body = string(markdown.ToHTML([]byte(d.Body), parser, nil)) // despues lo pasa a html
+	p <- d                                                        // al final hace lo siguiente
 
 }
 func renderInfo(w http.ResponseWriter, r *http.Request) {
@@ -64,8 +60,8 @@ func renderInfo(w http.ResponseWriter, r *http.Request) {
 	}
 	p := make(chan document)
 	// then decode the markdown to html
-	d, errChan := make(chan publications), make(chan error)
-	go getPublications(id, d, errChan)
+	d, errChan := make(chan document), make(chan error)
+	go getOnlyOnePublication(id, d, errChan)
 	go renderMarkdown(p, d, errChan)
 	t, err := template.ParseFiles("view/template.html")
 	if err != nil {

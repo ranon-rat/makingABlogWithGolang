@@ -99,6 +99,36 @@ func getPublications(min int, pChan chan publications, errChan chan error) {
 
 	return
 }
+func getOnlyOnePublication(id int, aChan chan document, errChan chan error) {
+	q := fmt.Sprintf(`
+	SELECT * FROM publ
+	WHERE id=%d`, id)
+	db := getConnection()
+	defer db.Close()
+	p, err := db.Query(q)
+	if err != nil {
+
+		log.Println("something is wrong", err)
+		aChan <- document{Title: "sorry but something is wrong", Body: "<h1> something wrong </h1>"}
+		errChan <- err
+		return
+	}
+
+	defer p.Close()
+	var d document
+	for p.Next() {
+		err = p.Scan(&d.ID, &d.Title, &d.Mineatura, &d.Body)
+		if err != nil {
+			log.Println(err)
+			aChan <- document{Title: "sorry but something is wrong", Body: "<h1> something wrong </h1>"}
+			errChan <- err
+			return
+		}
+	}
+	aChan <- d
+	errChan <- nil
+
+}
 
 // this is for get the size of the table
 func getTheSizeOfTheQuery() (int, error) {
