@@ -38,15 +38,22 @@ async function NewPublications() {
   for (let i: number = publication.Publications.length - 1; i >= 0; i--) {
     // then add elements into the dom
     let element = `
+    <p>
     <a  class="publications" href="/publication/${publication.Publications[i].id}">
       <div >
-        <div class="head">
-          <h4 align="center">${publication.Publications[i].title}</h4>
+        <div class="publicationContent">
+        <img src="${publication.Publications[i].mineatura}" > 
+              
+        <h4 >
+            ${publication.Publications[i].title}
+          </h4>
+         
+          
           </div>
-            <div class="about" style='background-image:url("${publication.Publications[i].mineatura}")'>
-          </div>
+        </div>
       </div>
     </a>
+    </p>
       
     `;
     console.log(publication.Publications[i]);

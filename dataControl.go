@@ -76,12 +76,10 @@ func getPublications(min, max int, pChan chan publications, errChan chan error) 
 		// cambia los valores de publication
 		err := m.Scan(&d.ID, &d.Title, &d.Mineatura, &d.Body)
 		if err != nil {
-
 			pChan <- publications{}
 			errChan <- err
 			fmt.Println(err)
 			return
-
 		}
 		pubs.Publications = append(pubs.Publications, d)
 		// los agrega a una listaa
@@ -95,9 +93,7 @@ func getPublications(min, max int, pChan chan publications, errChan chan error) 
 
 // this is for get the size of the table
 func getTheSizeOfTheQuery() (int, error) {
-	q := `SELECT id FROM publ
-	ORDER BY id DESC
-	LIMIT 1;` // this only get the last element and then send it
+	q := `SELECT MAX(id) FROM publ` // this only get the last element and then send it
 	var dataSize int
 	db := getConnection()
 	defer db.Close()
