@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"strings"
 
 	"github.com/gorilla/mux"
 )
@@ -31,21 +32,24 @@ func routes() {
 
 		*/
 		// aqui lo que deberia de hacer es obtener el ultimo resultado y enviarlo
+
 		http.Redirect(w, r, fmt.Sprintf("/%d", number/10), 301)
 	})
 	r.HandleFunc("/{page:[0-9]+}", func(w http.ResponseWriter, r *http.Request) {
 
 		http.ServeFile(w, r, "view/home.html")
 	})
-	r.HandleFunc("/public/{directory}/{file}", func(w http.ResponseWriter, r *http.Request) {
-
-		http.ServeFile(w, r, r.URL.Path[1:])
+	r.HandleFunc("/public/{directory+}", func(w http.ResponseWriter, r *http.Request) {
+		ruta := strings.ReplaceAll(r.URL.Path, "&", "/")[1:]
+		fmt.Println(ruta)
+		http.ServeFile(w, r, ruta)
 
 	})
+
 	r.HandleFunc("/admin/postfile", newPost)
 	r.HandleFunc("/api/{page:[0-9]+}", api)
 
 	r.HandleFunc("/publication/{id:[0-9]+}", renderInfo)
 
-	log.Println(http.ListenAndServe(":8090", r))
+	log.Println(http.ListenAndServe(":8080", r))
 }
