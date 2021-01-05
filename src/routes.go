@@ -14,13 +14,6 @@ func routes() {
 	r := mux.NewRouter()
 	// REDIRIJE
 	r.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		number, err := getTheSizeOfTheQuery()
-		if err != nil || number <= 0 {
-			log.Println("something is wrong", err, number)
-			w.Write([]byte("something is wrong sorry"))
-			return
-		}
-
 		http.Redirect(w, r, "/1", 301)
 	})
 	r.HandleFunc("/{page:[0-9]+}", func(w http.ResponseWriter, r *http.Request) {
