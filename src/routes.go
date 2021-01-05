@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"net/http"
 	"strings"
@@ -22,18 +21,7 @@ func routes() {
 			return
 		}
 
-		// hmm por alguna razon no me redirect a la pagina que deseo hmm
-		/*
-			creo que ya se cual es el problema
-			puede que sean por los datos de navegacion y que por
-			defecto te reenvie a la pagina con la que accediste primero por alguna razon
-			puede que sea buena idea  buscar una forma de hacer que borre las cookies
-			si ya cheque , si es problema del navegador 😩. eso no se como solucionarlo :(
-
-		*/
-		// aqui lo que deberia de hacer es obtener el ultimo resultado y enviarlo
-
-		http.Redirect(w, r, fmt.Sprintf("/%d", number/cantidad), 301)
+		http.Redirect(w, r, "/1", 301)
 	})
 	r.HandleFunc("/{page:[0-9]+}", func(w http.ResponseWriter, r *http.Request) {
 
