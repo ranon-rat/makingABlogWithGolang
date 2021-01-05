@@ -15,10 +15,6 @@ import (
 	"github.com/gorilla/mux"
 )
 
-const (
-	cantidad int = 20
-)
-
 func bodyRequest(r *http.Request) string {
 	body, _ := ioutil.ReadAll(r.Body)
 	// aqui lo que haces es pasar el body a un string para despues pasarlo a un json

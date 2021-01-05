@@ -11,6 +11,10 @@ import (
 	_ "github.com/lib/pq"
 )
 
+const (
+	cantidad int = 10
+)
+
 type document struct {
 	ID        int    `json:"id"`
 	Title     string `json:"title"`

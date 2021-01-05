@@ -2,10 +2,14 @@ body{
     background-color:#000;
     color:#fff;
     font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
+    margin: 0px !important;
 }
-#tituloh1{
-    font-size:9em;
+* {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
 }
+
 pre{
    width:98%;
    border-radius: 10px;
@@ -18,7 +22,9 @@ code{
     background-color:#2d2d2d;
     width:79em;
 }
+
 div{
+    margin:4px !important;
     margin-top:10px;
 }
 table{
@@ -39,7 +45,7 @@ td{
     border-style:solid;
 }
 .publications div {
-    color:white;
+
     text-decoration: none;
     border-radius: 10px;
     width:100%;
@@ -52,20 +58,17 @@ td{
     height: 20em;
 }
 .publicationContent{
-    height: 4em;
+    height: 8em;
 }
 a{
     text-decoration: none;
+    color:#fff;
 }
 
 .publicationContent img{
-
     float:right;
-    height: 4em;
-    border-radius: 10px;
-
-
-  
+    height: 8em;
+    border-radius: 10px;  
 }
 .aboutPubication{
     bottom: 10em;
@@ -74,8 +77,39 @@ a{
     color:rgb(165, 165, 165);
 
 }
+.buttonElementID{
+ 
+    margin-left: auto;
+    margin-right: auto;
 
+    border-radius: 2px;
+    text-align: center;
+    background-color: rgb(31, 30, 30);
+    width: 4em;
+    
+    display:inline-block;
+}
+.buttonElementID:hover{
+    color:#000;
+    background-color: rgb(255, 255, 255);
+}
+#content{
+    width:59em;
+}
+#pagePublications{
+    display: flex;
+    justify-content: center;
+    margin:4px;
+
+    padding-top:10px;
+    margin-left: auto;
+    margin-right: auto;
+}
 #navegationVar {
+    position: -webkit-sticky;
+    position: sticky;
+    top: 0;
+    
 
     list-style-type: none;
     margin: 0;
@@ -89,6 +123,7 @@ a{
     
 }
 #navegationVar li a {
+   
     
     display: block;
     color: white;
@@ -110,7 +145,6 @@ a{
 #inicio h2{
     font-size: 4em;
 }
-#pagePublications div{
-    text-align: center;
-    
+#titulo h1{
+    font-size:9em;
 }

@@ -45,11 +45,15 @@ async function NewPublications() {
           <div class="publicationContent">
           <img src="${i.mineatura}" >    
           <div class="aboutPubication"> 
-            <h4 >
+            <h1 >
               ${i.title}
-            </h4>
+            </h1>
             <p >
-            ${i.bodyOfDocument.slice(0, 30).replace(/#|'|`|"|\||-|@|=/gi, "")}
+            ${
+              i.bodyOfDocument
+                .slice(0, i.bodyOfDocument.indexOf("\n") % 40)
+                .replace(/#|'|`|"|\||-|@|=/gi, "") + "..."
+            }
             </p>
           </div>
             
@@ -71,22 +75,13 @@ async function NewPublications() {
   ) {
     let Element: string = `
  
-    <div class="buttonElementID" style="background-color: rgb(255, 255, 255);
-     width:1em;
-    height: 1em;">
-      <a class="buttonElementID" style="background-color: rgb(255, 255, 255);" href="/${i}" style=" >
-        <div class="buttonElementID" style="  
-        
-        text-decoration: none;
-        color:rgb(0, 0, 0);
-        display:inline-block;
-        width:10px;
-        height: 10px;
-        " >
-        <h4 > ${i} </h4>
+ 
+      <a   href="/${i}"  >
+        <div class="buttonElementID"  >
+        <h3 > ${i} </h3>
         </div>
       </a>
-    </div >
+ 
     `;
 
     pagePublications.innerHTML += Element;
