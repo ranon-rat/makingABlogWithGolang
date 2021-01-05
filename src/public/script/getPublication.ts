@@ -28,30 +28,30 @@ async function NewPublications() {
   await fetch(urlApi)
     .then((r) => r.text())
     .then((data) => {
-      console.log(data);
       publication = data;
       publication = JSON.parse(publication);
     });
 
   let d: any = document.getElementById("publications");
+
+  // add the elements
   for (let i of publication.Publications) {
     // then add elements into the dom
     let element = `
     <p>
-    <a  class="publications" href="/publication/${i.id}">
-      <div >
-        <div class="publicationContent">
-        <img src="${i.mineatura}"style="height: 8em;" > 
-              
-        <h4 >
-            ${i.title}
-          </h4>
-         
+      <a  class="publications" href="/publication/${i.id}">
+        <div >
+          <div class="publicationContent">
+          <img src="${i.mineatura}"style="height: 8em;" >     
+          <h4 >
+              ${i.title}
+            </h4>
           
+            
+            </div>
           </div>
         </div>
-      </div>
-    </a>
+      </a>
     </p>
       
     `;
@@ -59,15 +59,13 @@ async function NewPublications() {
     d.innerHTML += element;
   }
   let pagePublications: any = document.getElementById("pagePublications");
-  for (let i: number = publication.Size / publication.Cantidad; i > 0; i--) {
+  for (let i: number = 1; i <= publication.Size / publication.Cantidad; i++) {
     let Element: string = `
  
     <div class="buttonElementID" style="background-color: rgb(255, 255, 255);
      width:1em;
     height: 1em;">
-      <a class="buttonElementID" style="background-color: rgb(255, 255, 255);" href="/${Math.round(
-        (publication.Size / publication.Cantidad - i) * publication.Cantidad
-      )}" style=" >
+      <a class="buttonElementID" style="background-color: rgb(255, 255, 255);" href="/${i}" style=" >
         <div class="buttonElementID" style="  
         
         text-decoration: none;
@@ -76,17 +74,14 @@ async function NewPublications() {
         width:10px;
         height: 10px;
         " >
-          <h4 > ${
-            Math.round(publication.Size / publication.Cantidad - i) + 1
-          } </h4>
+        <h4 > ${i} </h4>
         </div>
       </a>
     </div >
     `;
 
     pagePublications.innerHTML += Element;
-    console.log(Math.round(publication.Size / 10 - i) + 1);
+    console.log(i); // this supose to be you
   }
-  console.log(publication);
 }
 NewPublications();

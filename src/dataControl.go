@@ -70,12 +70,12 @@ func addPublication(e document) error {
 	return nil
 }
 func getPublications(min int, pChan chan publications, errChan chan error) {
+	size, _ := getTheSizeOfTheQuery()
 	// este es el consultorio croe que se llamaba asi , ya no me acuerdo xd
 	q := fmt.Sprintf(`
 	SELECT * FROM publ 
-	WHERE  id >=%d
-	ORDER BY id DESC 
-	LIMIT %d;`, min, cantidad)
+	WHERE  id >=%d AND  id <= %d
+	ORDER BY id DESC ;`, size-(min*cantidad), size-(min*cantidad)+cantidad)
 	/*
 		aqui lo que basicamente hace es ordenar del mayor al menor
 	*/
