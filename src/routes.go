@@ -14,11 +14,8 @@ func routes() {
 	r := mux.NewRouter()
 	// REDIRIJE
 	r.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-<<<<<<< HEAD
-
-=======
->>>>>>> 525ad8045c50fc4c549f1662e65ace98649ff24e
 		http.Redirect(w, r, "/1", 301)
+		// yeah this is cool
 	})
 	// load the page
 	r.HandleFunc("/{page:[0-9]+}", func(w http.ResponseWriter, r *http.Request) {
