@@ -2,8 +2,10 @@ package main
 
 import (
 	"database/sql"
+	"encoding/json"
 	"errors"
 	"fmt"
+	"io/ioutil"
 	"log"
 
 	_ "github.com/lib/pq"
@@ -22,9 +24,23 @@ type publications struct {
 }
 
 func getConnection() *sql.DB {
-	dsn := "postgres://ranon:ranon@127.0.0.1:5432/publications?sslmode=disable"
+	conf, err := ioutil.ReadFile("config.json")
+	if err != nil {
+		log.Println(err)
+		return nil
+	}
+	var c map[string]string
+	json.Unmarshal(conf, &c)
+	dsn := fmt.Sprintf("postgres://%s:%s@%s:%s/%s?sslmode=disable",
+		c["user"],
+		c["password"],
+		c["ip"],
+		c["port"],
+		c["database"])
+
 	db, err := sql.Open("postgres", dsn)
 	if err != nil {
+		log.Println(dsn)
 		fmt.Println(err)
 	}
 	return db
