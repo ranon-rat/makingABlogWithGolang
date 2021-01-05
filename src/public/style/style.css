@@ -41,8 +41,9 @@ td{
 .publications div {
     color:white;
     text-decoration: none;
+    border-radius: 10px;
     width:100%;
-    border-style: solid;
+    background-color: rgb(19, 19, 19);
     
 
 }
@@ -50,11 +51,28 @@ td{
     background-size: 100% 100%;
     height: 20em;
 }
+.publicationContent{
+    height: 4em;
+}
+a{
+    text-decoration: none;
+}
+
 .publicationContent img{
 
-    float:inline-end;
-    height: 8em;
     float:right;
+    height: 4em;
+    border-radius: 10px;
+
+
+  
+}
+.aboutPubication{
+    bottom: 10em;
+}
+.aboutPubication p{
+    color:rgb(165, 165, 165);
+
 }
 
 #navegationVar {
@@ -85,4 +103,14 @@ td{
 }
 #body{
     border-style:none;
+}
+#inicio h1{
+    font-size: 8em;
+}
+#inicio h2{
+    font-size: 4em;
+}
+#pagePublications div{
+    text-align: center;
+    
 }

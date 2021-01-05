@@ -4,10 +4,11 @@ interface Pub {
     id: number;
     title: string;
     mineatura: string;
-    body: string;
+    bodyOfDocument: string;
   }[];
   Size: number;
 }
+
 async function NewPublications() {
   let urlApi: string =
     "api" + "/" + window.location.pathname.replace(/\//gi, "");
@@ -17,7 +18,7 @@ async function NewPublications() {
         id: 0,
         title: "",
         mineatura: "",
-        body: "",
+        bodyOfDocument: "",
       },
     ],
     Size: 0,
@@ -42,11 +43,15 @@ async function NewPublications() {
       <a  class="publications" href="/publication/${i.id}">
         <div >
           <div class="publicationContent">
-          <img src="${i.mineatura}"style="height: 8em;" >     
-          <h4 >
+          <img src="${i.mineatura}" >    
+          <div class="aboutPubication"> 
+            <h4 >
               ${i.title}
             </h4>
-          
+            <p >
+            ${i.bodyOfDocument.slice(0, 30).replace(/#|'|`|"|\||-|@|=/gi, "")}
+            </p>
+          </div>
             
             </div>
           </div>
@@ -59,7 +64,11 @@ async function NewPublications() {
     d.innerHTML += element;
   }
   let pagePublications: any = document.getElementById("pagePublications");
-  for (let i: number = 1; i <= publication.Size / publication.Cantidad; i++) {
+  for (
+    let i: number = 1;
+    i <= publication.Size / publication.Cantidad + 1;
+    i++
+  ) {
     let Element: string = `
  
     <div class="buttonElementID" style="background-color: rgb(255, 255, 255);
