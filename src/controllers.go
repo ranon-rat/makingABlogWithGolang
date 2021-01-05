@@ -3,11 +3,11 @@ package main
 import (
 	"bytes"
 	"encoding/json"
-	"fmt"
 	"io/ioutil"
 	"log"
 	"net/http"
 	"strconv"
+	"strings"
 	"text/template"
 
 	"github.com/gomarkdown/markdown"
@@ -78,36 +78,47 @@ func check(c chan bool, d document, w http.ResponseWriter) {
 
 // this is the post manager , with this you can do really interesting things
 func newPost(w http.ResponseWriter, r *http.Request) {
-	// aqui solo es para ver los metodos
-	switch r.Method {
-	case "POST":
-		// i need to do some data bases for do this
-
-		fmt.Println(r.Header.Get("x-forwarded-for")) // in the future i gona do something with this
-		var d document
-		m := bodyRequest(r)
-		// decode the bodyRequest
-		json.Unmarshal([]byte(m), &d)
-		cont := make(chan bool)
-		// this is for check if something is wrong
-		go check(cont, d, w)
-		if <-cont {
-			log.Println("fuck")
-			return
-		}
-		// add the publications
-		go addPublication(d)
-
-		break
-	case "GET":
-		http.ServeFile(w, r, "view/post.html")
-		break
-	default:
-		// solo acepta 2 metodos de request
-		w.Write([]byte("ñao ñao voce es maricon"))
-		break
+	conf, err := ioutil.ReadFile("adminip.txt")
+	if err != nil {
+		log.Println(err)
+		return
 	}
-	fmt.Println("something")
+
+	// aqui solo es para ver los metodos
+	log.Println(r.Header.Get("x-forwarded-for"))
+	if strings.Contains(string(conf), r.Header.Get("x-forwarded-for")) {
+		switch r.Method {
+		case "POST":
+			// i need to do some data bases for do this
+
+			// in the future i gona do something with this
+			var d document
+			m := bodyRequest(r)
+			// decode the bodyRequest
+			json.Unmarshal([]byte(m), &d)
+			cont := make(chan bool)
+			// this is for check if something is wrong
+			go check(cont, d, w)
+			if <-cont {
+				log.Println("fuck")
+				return
+			}
+			// add the publications
+			go addPublication(d)
+
+			break
+		case "GET":
+			http.ServeFile(w, r, "view/post.html")
+			break
+		default:
+			// solo acepta 2 metodos de request
+			w.Write([]byte("ñao ñao voce es maricon"))
+			break
+		}
+	} else {
+		http.ServeFile(w, r, "view/denegado.html")
+	}
+
 }
 
 // this is the ap

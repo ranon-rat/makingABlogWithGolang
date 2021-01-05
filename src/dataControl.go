@@ -43,6 +43,7 @@ func getConnection() *sql.DB {
 		c["database"])
 
 	db, err := sql.Open("postgres", dsn)
+
 	if err != nil {
 		log.Println(dsn)
 		fmt.Println(err)

@@ -11,7 +11,7 @@ body{
 }
 
 pre{
-   width:98%;
+    width:59em;
    border-radius: 10px;
    background-color:#2d2d2d;
 
@@ -20,7 +20,7 @@ pre{
 code{
     
     background-color:#2d2d2d;
-    width:79em;
+    width:59em;
 }
 
 div{
