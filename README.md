@@ -5,7 +5,7 @@ I'm going to finish this anyway
 
 # this is how it looks the homepage
 
-<img src="https://media.discordapp.net/attachments/706349126719242302/796053479424000000/Captura_de_Pantalla_2021-01-05_a_las_10.31.52_a.m..png?width=1584&height=941" width=1000>
+<img src="https://cdn.discordapp.com/attachments/786752885982625862/796430902762012722/Captura_de_Pantalla_2021-01-06_a_las_11.30.18_a.m..png" width=1000>
 
 # this is how looks the article
 
