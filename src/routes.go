@@ -14,7 +14,7 @@ func routes() {
 	r := mux.NewRouter()
 	// REDIRIJE
 	r.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		http.Redirect(w, r, "/1", 301)
+		http.Redirect(w, r, "/1", http.StatusMovedPermanently)
 		// yeah this is cool
 	})
 	// load the page
