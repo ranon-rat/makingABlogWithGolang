@@ -3,6 +3,7 @@ package main
 import (
 	"log"
 	"net/http"
+	"os"
 	"strings"
 
 	"github.com/gorilla/mux"
@@ -14,7 +15,7 @@ func routes() {
 	r := mux.NewRouter()
 	// REDIRIJE
 	r.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		http.Redirect(w, r, "/1", http.StatusMovedPermanently)
+		http.Redirect(w, r, "/1", 301)
 		// yeah this is cool
 	})
 	// load the page
@@ -32,6 +33,11 @@ func routes() {
 	// render the publication
 
 	r.HandleFunc("/publication/{id:[0-9]+}", renderInfo)
+	port, ok := os.LookupEnv("PORT")
 
-	log.Println(http.ListenAndServe(":8080", r))
+	if ok == false {
+		port = "8080"
+	}
+
+	log.Println(http.ListenAndServe(":"+port, r))
 }

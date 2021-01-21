@@ -2,57 +2,25 @@ package main
 
 import (
 	"database/sql"
-	"encoding/json"
 	"errors"
 	"fmt"
-	"io/ioutil"
 	"log"
 
-	_ "github.com/lib/pq"
+	_ "github.com/mattn/go-sqlite3"
 )
-
-const (
-	cantidad int = 10
-)
-
-type document struct {
-	ID        int    `json:"id"`
-	Title     string `json:"title"`
-	Mineatura string `json:"mineatura"`
-	Body      string `json:"bodyOfDocument"`
-}
-type publications struct {
-	Size         int        `json:"Size"`
-	Publications []document `json:"Publications"`
-	Cantidad     int        `json:"Cantidad"`
-}
 
 func getConnection() *sql.DB {
-	conf, err := ioutil.ReadFile("config.json")
-	if err != nil {
-		log.Println(err)
-		return nil
-	}
-	var c map[string]string
-	json.Unmarshal(conf, &c)
-	dsn := fmt.Sprintf("postgres://%s:%s@%s:%s/%s?sslmode=disable",
-		c["user"],
-		c["password"],
-		c["ip"],
-		c["port"],
-		c["database"])
 
-	db, err := sql.Open("postgres", dsn)
+	db, err := sql.Open("sqlite3", "./publications.db")
 
 	if err != nil {
-		log.Println(dsn)
 		fmt.Println(err)
 	}
 	return db
 }
 func addPublication(e document) error {
 	q := `INSERT INTO 
-	publ(titulo,mineatura,body) 
+	publ(title,mineatura,body) 
 	values($1,$2,$3);
 	`
 	db := getConnection()
@@ -74,13 +42,17 @@ func addPublication(e document) error {
 	}
 	return nil
 }
-func getPublications(min int, pChan chan publications, errChan chan error) {
-	size, _ := getTheSizeOfTheQuery()
+func getPublications(min int, pChan chan []document) error {
+	sChan := make(chan int)
+	go getTheSizeOfTheQuery(sChan)
+	size := <-sChan
+
 	// este es el consultorio croe que se llamaba asi , ya no me acuerdo xd
 	q := fmt.Sprintf(`
 	SELECT * FROM publ 
-	WHERE  id >=%d AND  id <%d
-	ORDER BY id DESC ;`, size-(min*cantidad), size-(min*cantidad)+cantidad)
+	WHERE  id >=%d AND  id <=%d
+	ORDER BY id DESC ;`, (size - (min * cantidad)), (size-(min*cantidad)+cantidad)+1)
+
 	/*
 		aqui lo que basicamente hace es ordenar del mayor al menor
 	*/
@@ -92,33 +64,32 @@ func getPublications(min int, pChan chan publications, errChan chan error) {
 	m, err := db.Query(q) // envia esto y la salida deb de ser la siguiente
 	if err != nil {
 
-		pChan <- publications{}
-		errChan <- err
-		log.Println(err)
-		return
+		close(pChan)
+
+		log.Println(err.Error())
+		return err
 	}
 	defer m.Close() // espera a cerrar el canal ( por razones de seguridad)
 
-	var pubs publications
+	var pubs []document
 	for m.Next() {
 		// repasa la informacion,
 		var d document
 		// cambia los valores de publication
 		err := m.Scan(&d.ID, &d.Title, &d.Mineatura, &d.Body)
 		if err != nil {
-			pChan <- publications{}
-			errChan <- err
+			close(pChan)
+
 			fmt.Println(err)
-			return
+			return err
 		}
-		pubs.Publications = append(pubs.Publications, d)
+		pubs = append(pubs, d)
 		// los agrega a una listaa
 	}
 
 	pChan <- pubs
-	errChan <- nil
 
-	return
+	return nil
 }
 func getOnlyOnePublication(id int, aChan chan document, errChan chan error) {
 	q := fmt.Sprintf(`
@@ -152,9 +123,9 @@ func getOnlyOnePublication(id int, aChan chan document, errChan chan error) {
 }
 
 // this is for get the size of the table
-func getTheSizeOfTheQuery() (int, error) {
+func getTheSizeOfTheQuery(sizeChan chan int) error {
 	q := `
-	SELECT MAX(id) 
+	SELECT COUNT(*) 
 	FROM publ
 	`
 	// como no he encontrado muchas maneras de encontrar el
@@ -165,16 +136,20 @@ func getTheSizeOfTheQuery() (int, error) {
 	defer db.Close()
 	m, err := db.Query(q)
 	if err != nil {
-		return 0, err
+		close(sizeChan)
+		return err
 	}
 	defer m.Close()
 	for m.Next() {
 
 		err = m.Scan(&dataSize)
 		if err != nil {
-			return 0, err
+			close(sizeChan)
+			return err
+
 		}
 
 	}
-	return dataSize, nil
+	sizeChan <- dataSize
+	return nil
 }

@@ -134,27 +134,20 @@ func api(w http.ResponseWriter, r *http.Request) {
 
 	// concurrency communication
 	//the db management
-	aChan, errChan := make(chan publications), make(chan error)
+	sizeChan, dChan := make(chan int), make(chan []document)
 
 	// we use this function only one time so, im only usign a anon function 😩
 
-	go getPublications(min, aChan, errChan)
-	a, err := <-aChan, <-errChan
-	a.Cantidad = cantidad
-	if err != nil {
-		log.Println("fuck", err)
-	}
-	// por alguna razon no me permitia obtener el tamño de esa manera 🤑
-	a.Size, _ = getTheSizeOfTheQuery()
-
-	b, err := json.Marshal(a)
-	if err != nil {
-		log.Println("something is wrong", err)
-		return
+	go getPublications(min, dChan)
+	go getTheSizeOfTheQuery(sizeChan)
+	api := publications{
+		Cantidad:     cantidad,
+		Publications: <-dChan,
+		Size:         <-sizeChan,
 	}
 
 	// send the json
-	w.Write(b)
+	json.NewEncoder(w).Encode(api)
 
 }
 
