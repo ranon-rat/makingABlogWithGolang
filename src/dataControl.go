@@ -50,7 +50,7 @@ func getPublications(min int, pChan chan []document) error {
 	// este es el consultorio croe que se llamaba asi , ya no me acuerdo xd
 	q := fmt.Sprintf(`
 	SELECT * FROM publ 
-	WHERE  id >=%d AND  id <=%d
+	WHERE  rowid >=%d AND  rowid <=%d
 	ORDER BY id DESC ;`, (size - (min * cantidad)), (size-(min*cantidad)+cantidad)+1)
 
 	/*
