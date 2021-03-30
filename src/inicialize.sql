@@ -1,4 +1,4 @@
--- this is for sqlite3
+-- this is for postgresql
 CREATE DATABASE publications
     WITH 
     OWNER = ranon;

@@ -15,11 +15,7 @@ async function sendDocument() {
     alert("you need to define everything");
     return;
   }
-  if (
-    f.title.length >= 50 ||
-    f.mineatura.length >= 100 ||
-    f.bodyOfDocument.length >= 100000
-  ) {
+  if (f.bodyOfDocument.length >= 100000) {
     alert("sorry but is too bigger for send that to the server");
     return;
   }

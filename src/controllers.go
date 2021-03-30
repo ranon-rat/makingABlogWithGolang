@@ -1,7 +1,8 @@
 package main
 
 import (
-	"bytes"
+	"crypto/sha256"
+	"encoding/hex"
 	"encoding/json"
 	"io/ioutil"
 	"log"
@@ -9,22 +10,12 @@ import (
 	"strconv"
 	"strings"
 	"text/template"
+	"time"
 
 	"github.com/gomarkdown/markdown"
 	"github.com/gomarkdown/markdown/parser"
 	"github.com/gorilla/mux"
 )
-
-func bodyRequest(r *http.Request) string {
-	body, _ := ioutil.ReadAll(r.Body)
-	// aqui lo que haces es pasar el body a un string para despues pasarlo a un json
-	r.Body = ioutil.NopCloser(bytes.NewBuffer(body))
-	buf := new(bytes.Buffer)
-	buf.ReadFrom(r.Body)
-
-	newStr := buf.String()
-	return newStr
-}
 
 func renderMarkdown(p chan document, publicationChan chan document, errChan chan error) {
 	// lo que hace es parsear el markdown en html
@@ -73,7 +64,12 @@ func renderInfo(w http.ResponseWriter, r *http.Request) {
 func check(c chan bool, d document, w http.ResponseWriter) {
 	_, err := http.Get(d.Mineatura)
 	log.Println(d, err)
-	c <- d.Body == "" || d.Title == "" || d.Mineatura == "" || len(d.Body) >= 100000 || len(d.Title) >= 50 || len(d.Mineatura) >= 100 || err != nil
+	c <- d.Body == "" || d.Title == "" || d.Mineatura == "" || err != nil
+}
+func encryptData(data string) string {
+	sum := sha256.Sum256([]byte(data)) // we encript the data
+
+	return hex.EncodeToString(sum[:])
 }
 
 // this is the post manager , with this you can do really interesting things
@@ -85,17 +81,28 @@ func newPost(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// aqui solo es para ver los metodos
-	log.Println(r.Header.Get("x-forwarded-for"))
-	if strings.Contains(string(conf), r.Header.Get("x-forwarded-for")) {
+
+	cookie, err := r.Cookie("ip")
+	if err != nil {
+
+		http.SetCookie(w, &http.Cookie{
+			Name:    "ip",
+			Value:   r.Header.Get("x-forwarded-for"),
+			Expires: time.Now().AddDate(1, 0, 0),
+		})
+	}
+	// new things
+	// go back to the normal
+	if strings.Contains(string(conf), encryptData(r.Header.Get("x-forwarded-for"))) || strings.Contains(string(conf), encryptData(cookie.Value)) {
 		switch r.Method {
 		case "POST":
 			// i need to do some data bases for do this
 
-			// in the future i gona do something with this
+			// in the future i gonna do something with this
 			var d document
-			m := bodyRequest(r)
+
 			// decode the bodyRequest
-			json.Unmarshal([]byte(m), &d)
+			json.NewDecoder(r.Body).Decode(&d)
 			cont := make(chan bool)
 			// this is for check if something is wrong
 			go check(cont, d, w)
@@ -103,11 +110,14 @@ func newPost(w http.ResponseWriter, r *http.Request) {
 				log.Println("fuck")
 				return
 			}
+
 			// add the publications
+
 			go addPublication(d)
 
 			break
 		case "GET":
+
 			http.ServeFile(w, r, "view/post.html")
 			break
 		default:
@@ -116,6 +126,7 @@ func newPost(w http.ResponseWriter, r *http.Request) {
 			break
 		}
 	} else {
+
 		http.ServeFile(w, r, "view/denegado.html")
 	}
 

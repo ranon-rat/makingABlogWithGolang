@@ -4,7 +4,6 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"strings"
 
 	"github.com/gorilla/mux"
 )
@@ -24,8 +23,8 @@ func routes() {
 		http.ServeFile(w, r, "view/home.html")
 	})
 	// send the files
-	r.HandleFunc("/public/{directory+}", func(w http.ResponseWriter, r *http.Request) {
-		http.ServeFile(w, r, strings.ReplaceAll(r.URL.Path, "&", "/")[1:])
+	r.HandleFunc(`/public/{file:[\/\w\d\W]+?}`, func(w http.ResponseWriter, r *http.Request) {
+		http.ServeFile(w, r, r.URL.Path[1:])
 	})
 	r.HandleFunc("/admin/postfile", newPost)
 	// get the info

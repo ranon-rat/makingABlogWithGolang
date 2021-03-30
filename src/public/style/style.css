@@ -41,6 +41,9 @@ th, td,tbody,thead {
 td{
     text-align:center;
 }
+#content img{
+    width:60em;
+}
 .contenedor{
     border-style:solid;
 }
@@ -62,7 +65,7 @@ td{
 }
 a{
     text-decoration: none;
-    color:#fff;
+    color:rgb(90, 0, 235);
 }
 
 .publicationContent img{
@@ -136,15 +139,20 @@ a{
     background-color: #111;
     color:white;
 }
+#gopher{
+    float: right;
+
+
+}
 #body{
     border-style:none;
 }
 #inicio h1{
-    font-size: 8em;
+    font-size: 6em;
 }
 #inicio h2{
     font-size: 4em;
 }
 #titulo h1{
-    font-size:9em;
+    font-size:7em;
 }

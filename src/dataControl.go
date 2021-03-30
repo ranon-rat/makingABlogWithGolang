@@ -92,13 +92,13 @@ func getPublications(min int, pChan chan []document) error {
 	return nil
 }
 func getOnlyOnePublication(id int, aChan chan document, errChan chan error) {
-	q := fmt.Sprintf(`
-	SELECT * FROM publ
-	WHERE id=%d`, id)
+	q := (`SELECT * FROM publ
+	WHERE id=?1`)
 	db := getConnection()
 	defer db.Close()
-	p, err := db.Query(q)
+	p, err := db.Query(q,id)
 	if err != nil {
+	
 
 		log.Println("something is wrong", err)
 		aChan <- document{Title: "sorry but something is wrong", Body: "<h1> something wrong </h1>"}
