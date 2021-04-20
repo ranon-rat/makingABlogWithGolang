@@ -1,4 +1,4 @@
-module github.com/ranon-rat/myBlog
+module github.com/ranon-rat/blog
 
 go 1.15
 

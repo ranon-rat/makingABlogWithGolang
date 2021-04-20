@@ -1,4 +1,4 @@
-package main
+package router
 
 import (
 	"log"
@@ -6,9 +6,10 @@ import (
 	"os"
 
 	"github.com/gorilla/mux"
+	"github.com/ranon-rat/blog/src/controllers"
 )
 
-func routes() {
+func Routes() {
 	// aqui solo es para dar la salida de informacion
 
 	r := mux.NewRouter()
@@ -26,12 +27,12 @@ func routes() {
 	r.HandleFunc(`/public/{file:[\/\w\d\W]+?}`, func(w http.ResponseWriter, r *http.Request) {
 		http.ServeFile(w, r, r.URL.Path[1:])
 	})
-	r.HandleFunc("/admin/postfile", newPost)
+	r.HandleFunc("/admin/postfile", controllers.NewPost)
 	// get the info
-	r.HandleFunc("/api/{page:[0-9]+}", api)
+	r.HandleFunc("/api/{page:[0-9]+}", controllers.Api)
 	// render the publication
 
-	r.HandleFunc("/publication/{id:[0-9]+}", renderInfo)
+	r.HandleFunc("/publication/{id:[0-9]+}", controllers.RenderInfo)
 	port, ok := os.LookupEnv("PORT")
 
 	if ok == false {

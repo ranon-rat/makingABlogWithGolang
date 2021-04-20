@@ -1,5 +1,5 @@
-/public/script/getPublication.js
-/public/script/post.js
-/public/script/prism.js
+
+/public/script/*.js
 /public/style/prism.css
-*.js
+.DS_Store
+*/.DS_Store

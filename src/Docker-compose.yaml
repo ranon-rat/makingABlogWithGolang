@@ -1,0 +1,8 @@
+  
+version: "3"
+
+services: 
+    iot-camera:
+        build: .
+        ports: 
+            - 8080:8080
