@@ -2,7 +2,7 @@
 version: "3"
 
 services: 
-    iot-camera:
+    blog:
         build: .
         ports: 
             - 8080:8080

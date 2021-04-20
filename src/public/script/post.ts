@@ -1,3 +1,4 @@
+// @ts-nocheck
 interface Formulario {
   title: any;
   mineatura: any;
