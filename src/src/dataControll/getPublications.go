@@ -13,7 +13,8 @@ func GetPublications(min int, pChan chan []stuff.Document) error {
 	sChan := make(chan int)
 	go GetTheSizeOfTheQuery(sChan)
 	size := <-sChan
-
+	log.Println(size)
+	log.Println((size - (min * stuff.Cantidad)), (size-(min*stuff.Cantidad)+stuff.Cantidad)+1)
 	// este es el consultorio croe que se llamaba asi , ya no me acuerdo xd
 	q := `
 	SELECT * FROM publ 
@@ -28,7 +29,7 @@ func GetPublications(min int, pChan chan []stuff.Document) error {
 	// aqui lo que hace es conectarse a la base de datos
 	defer db.Close()
 	//espera a cerrarse para evitar ciertos problemas de seguridad
-	m, err := db.Query(q,(size - (min * stuff.Cantidad)),(size-(min*stuff.Cantidad)+stuff.Cantidad)+1) // envia esto y la salida deb de ser la siguiente
+	m, err := db.Query(q,(size - (min * stuff.Cantidad)), (size-(min*stuff.Cantidad)+stuff.Cantidad)+1) // envia esto y la salida deb de ser la siguiente
 	if err != nil {
 		log.Println(err.Error())
 		close(pChan)

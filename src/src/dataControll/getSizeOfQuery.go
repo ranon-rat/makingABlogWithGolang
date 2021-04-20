@@ -5,10 +5,7 @@ import (
 )
 
 func GetTheSizeOfTheQuery(sizeChan chan int) error {
-	q := `
-	SELECT COUNT(*) 
-	FROM publ
-	`
+	q := `SELECT COUNT(*) FROM publ`
 	// como no he encontrado muchas maneras de encontrar el
 	//tamaño de una tabla lo que hace aqui es basicamente seleccionar el maximo valor
 	dataSize:=0
