@@ -30,6 +30,7 @@ func AddPublication(e stuff.Document) error {
 	}
 	i, _ := r.RowsAffected()
 	if i != 1 {
+		log.Println("se esperaba una sola fila omg")
 		return errors.New("se esperaba una sola fila omg")
 	}
 	return nil

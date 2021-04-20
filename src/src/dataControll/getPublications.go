@@ -1,7 +1,6 @@
 package dataControll
 
 import (
-	"fmt"
 	"log"
 
 	"github.com/ranon-rat/blog/src/stuff"
@@ -16,10 +15,10 @@ func GetPublications(min int, pChan chan []stuff.Document) error {
 	size := <-sChan
 
 	// este es el consultorio croe que se llamaba asi , ya no me acuerdo xd
-	q := fmt.Sprintf(`
+	q := `
 	SELECT * FROM publ 
-	WHERE  rowid >=%d AND  rowid <=%d
-	ORDER BY id DESC ;`, (size - (min * stuff.Cantidad)), (size-(min*stuff.Cantidad)+stuff.Cantidad)+1)
+	WHERE  rowid >=?1 AND  rowid <=?2
+	ORDER BY id DESC ;`
 
 	/*
 		aqui lo que basicamente hace es ordenar del mayor al menor
@@ -29,7 +28,7 @@ func GetPublications(min int, pChan chan []stuff.Document) error {
 	// aqui lo que hace es conectarse a la base de datos
 	defer db.Close()
 	//espera a cerrarse para evitar ciertos problemas de seguridad
-	m, err := db.Query(q) // envia esto y la salida deb de ser la siguiente
+	m, err := db.Query(q,(size - (min * stuff.Cantidad)),(size-(min*stuff.Cantidad)+stuff.Cantidad)+1) // envia esto y la salida deb de ser la siguiente
 	if err != nil {
 		log.Println(err.Error())
 		close(pChan)
