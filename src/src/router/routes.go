@@ -19,20 +19,20 @@ func Routes() {
 		// yeah this is cool
 	})
 	// load the page
-	r.HandleFunc("/{page:[0-9]+}", func(w http.ResponseWriter, r *http.Request) {
+	r.HandleFunc(`/{page:[\d]+}`, func(w http.ResponseWriter, r *http.Request) {
 
 		http.ServeFile(w, r, "view/home.html")
 	})
 	// send the files
-	r.HandleFunc(`/public/{file:[\/\w\d\W]+?}`, func(w http.ResponseWriter, r *http.Request) {
+	r.HandleFunc(`/public/{file:[\/\w\W]+?}`, func(w http.ResponseWriter, r *http.Request) {
 		http.ServeFile(w, r, r.URL.Path[1:])
 	})
 	r.HandleFunc("/admin/postfile", controllers.NewPost)
 	// get the info
-	r.HandleFunc("/api/{page:[0-9]+}", controllers.Api)
+	r.HandleFunc(`/api/{page:[\d]+}`, controllers.Api)
 	// render the publication
 
-	r.HandleFunc("/publication/{id:[0-9]+}", controllers.RenderInfo)
+	r.HandleFunc(`/publication/{id:[\d]+}`, controllers.RenderInfo)
 	port, ok := os.LookupEnv("PORT")
 
 	if !ok {
