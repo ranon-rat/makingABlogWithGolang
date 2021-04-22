@@ -11,7 +11,6 @@ import (
 
 func Routes() {
 	// aqui solo es para dar la salida de informacion
-
 	r := mux.NewRouter()
 	// REDIRIJE
 	r.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
@@ -20,7 +19,6 @@ func Routes() {
 	})
 	// load the page
 	r.HandleFunc(`/{page:[\d]+}`, func(w http.ResponseWriter, r *http.Request) {
-
 		http.ServeFile(w, r, "view/home.html")
 	})
 	// send the files
