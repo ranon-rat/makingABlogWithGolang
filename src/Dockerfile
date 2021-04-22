@@ -1,10 +1,10 @@
-FROM golang:latest
+FROM golang:alpine
 
 COPY . ./blog
 WORKDIR /go/blog/
-RUN apt update -y && apt upgrade -y
+RUN apk update && apk upgrade && apk add build-base
 # install the dependencies
-RUN apt-get install sqlite3 -y  && apt-get install npm -y
+RUN apk add sqlite  && apk add npm 
 RUN npm install -g typescript
 # init the database
 RUN cat database/inicialize.sql | sqlite3 database/publications.db
@@ -20,6 +20,6 @@ WORKDIR /go/blog/
 RUN go build main.go
 # delete
 RUN  rm -rf database/inicialize.sql
-RUN  apt-get remove npm -y
+RUN  apk del npm 
 
 CMD ["./main"]
