@@ -23,11 +23,8 @@ func Check(c chan bool, d stuff.Document, w http.ResponseWriter) {
 func Api(w http.ResponseWriter, r *http.Request) {
 	// only send this
 	// this is for use the apis
-	min, err := strconv.Atoi(mux.Vars(r)["page"])
-	if err != nil {
-		w.Write([]byte("something is wrong"))
-		return
-	}
+	min, _ := strconv.Atoi(mux.Vars(r)["page"])
+
 
 	// concurrency communication
 	//the db management

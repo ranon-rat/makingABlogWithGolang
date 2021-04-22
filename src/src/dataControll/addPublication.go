@@ -22,11 +22,8 @@ func AddPublication(e stuff.Document) error {
 		return err
 	}
 	defer stm.Close()
-	r, err := stm.Exec(&e.Title, &e.Mineatura, &e.Body)
-	if err != nil {
+	r, _ := stm.Exec(&e.Title, &e.Mineatura, &e.Body)
 	
-		return err
-	}
 	i, _ := r.RowsAffected()
 	if i != 1 {
 		

@@ -16,7 +16,6 @@ import (
 // this is the post manager , with this you can do really interesting things
 func NewPost(w http.ResponseWriter, r *http.Request) {
 	confB, err := ioutil.ReadFile("database/adminip.txt")
-
 	conf := string(confB)
 	// aqui solo es para ver los metodos
 

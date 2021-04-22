@@ -1,7 +1,6 @@
 package controllers
 
 import (
-	"log"
 	"net/http"
 	"strconv"
 	"text/template"
@@ -11,7 +10,6 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/ranon-rat/blog/src/dataControll"
 	"github.com/ranon-rat/blog/src/stuff"
-	"golang.org/x/sync/errgroup"
 )
 
 func RenderMarkdown(p chan stuff.Document, publicationChan chan stuff.Document) {
@@ -30,31 +28,22 @@ func RenderMarkdown(p chan stuff.Document, publicationChan chan stuff.Document) 
 }
 func RenderInfo(w http.ResponseWriter, r *http.Request) {
 	attr := mux.Vars(r)
-	var controlErrors errgroup.Group
+
 	// get the id of the publication
-	id, err := strconv.Atoi(attr["id"])
-	if err != nil {
-		log.Println("fuck ", err)
-		w.Write([]byte("sorry but agioue ´"))
-		return
-	}
+	id,_ := strconv.Atoi(attr["id"])
+
 	p := make(chan stuff.Document)
 	// then decode the markdown to html
 
 	d := make(chan stuff.Document)
-	controlErrors.Go(func() error {
-		return dataControll.GetOnlyOnePublication(id, d)
-	})
+	
+	go dataControll.GetOnlyOnePublication(id, d)
+	
 	go RenderMarkdown(p, d)
 	
 	t, _ := template.ParseFiles("view/template.html")
 	
-	if err=controlErrors.Wait();err != nil {
-		log.Println(err)
-		w.Write([]byte(err.Error()))
-
-		return
-	}
+	
 	// the goroutines are the best
 	//aqui estamos usando templates para evitar que tener que estar usando otra cosa
 	t.Execute(w, <-p)
