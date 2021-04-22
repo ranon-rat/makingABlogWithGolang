@@ -1,15 +1,12 @@
 package dataControll
 
 import (
-	"log"
-
 	"github.com/ranon-rat/blog/src/stuff"
 
 	_ "github.com/mattn/go-sqlite3"
 )
 
-
-func GetPublications(min int, pChan chan []stuff.Document)  {
+func GetPublications(min int, pChan chan []stuff.Document) {
 	sChan := make(chan int)
 	go GetTheSizeOfTheQuery(sChan)
 	size := <-sChan
@@ -27,12 +24,8 @@ func GetPublications(min int, pChan chan []stuff.Document)  {
 	// aqui lo que hace es conectarse a la base de datos
 	defer db.Close()
 	//espera a cerrarse para evitar ciertos problemas de seguridad
-	m, err := db.Query(q,(size - (min * stuff.Cantidad)), (size-(min*stuff.Cantidad)+stuff.Cantidad)+1) // envia esto y la salida deb de ser la siguiente
-	if err != nil {
-		close(pChan)
-		log.Println(err)
-		return
-	}
+	m, _:= db.Query(q, (size - (min * stuff.Cantidad)), (size-(min*stuff.Cantidad)+stuff.Cantidad)+1) // envia esto y la salida deb de ser la siguiente
+	
 	defer m.Close() // espera a cerrar el canal ( por razones de seguridad)
 
 	var pubs []stuff.Document
@@ -41,7 +34,7 @@ func GetPublications(min int, pChan chan []stuff.Document)  {
 		var d stuff.Document
 		// cambia los valores de publication
 		m.Scan(&d.ID, &d.Title, &d.Mineatura, &d.Body)
-		
+
 		pubs = append(pubs, d)
 		// los agrega a una listaa
 	}

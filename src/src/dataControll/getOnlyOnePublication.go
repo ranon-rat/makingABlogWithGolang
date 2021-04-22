@@ -6,13 +6,11 @@ import (
 	_ "github.com/mattn/go-sqlite3"
 )
 
-
-
 func GetOnlyOnePublication(id int, aChan chan stuff.Document) error {
 	q := (`SELECT * FROM publ WHERE id=?1`)
 	db := GetConnection()
 	defer db.Close()
-	p, err := db.Query(q,id)
+	p, err := db.Query(q, id)
 	if err != nil {
 
 		aChan <- stuff.Document{Title: "sorry but something is wrong", Body: "<h1> something wrong </h1>"}
@@ -22,9 +20,13 @@ func GetOnlyOnePublication(id int, aChan chan stuff.Document) error {
 	defer p.Close()
 	var d stuff.Document
 	for p.Next() {
-	
-		p.Scan(&d.ID, &d.Title, &d.Mineatura, &d.Body)
-	
+
+		err = p.Scan(&d.ID, &d.Title, &d.Mineatura, &d.Body)
+		if err != nil {
+
+			aChan <- stuff.Document{Title: "sorry but something is wrong", Body: "<h1> something wrong </h1>"}
+			return err
+		}
 	}
 	aChan <- d
 	return nil

@@ -58,7 +58,8 @@ func NewPost(w http.ResponseWriter, r *http.Request) {
 				log.Println(err)
 				return
 			}
-			break
+			return 
+	
 		case "GET":
 
 			http.ServeFile(w, r, "view/post.html")
