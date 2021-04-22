@@ -9,12 +9,10 @@ import (
 )
 
 
-func GetPublications(min int, pChan chan []stuff.Document) error {
+func GetPublications(min int, pChan chan []stuff.Document)  {
 	sChan := make(chan int)
 	go GetTheSizeOfTheQuery(sChan)
 	size := <-sChan
-	log.Println(size)
-	log.Println((size - (min * stuff.Cantidad)), (size-(min*stuff.Cantidad)+stuff.Cantidad)+1)
 	// este es el consultorio croe que se llamaba asi , ya no me acuerdo xd
 	q := `
 	SELECT * FROM publ 
@@ -31,9 +29,9 @@ func GetPublications(min int, pChan chan []stuff.Document) error {
 	//espera a cerrarse para evitar ciertos problemas de seguridad
 	m, err := db.Query(q,(size - (min * stuff.Cantidad)), (size-(min*stuff.Cantidad)+stuff.Cantidad)+1) // envia esto y la salida deb de ser la siguiente
 	if err != nil {
-		log.Println(err.Error())
 		close(pChan)
-		return err
+		log.Println(err)
+		return
 	}
 	defer m.Close() // espera a cerrar el canal ( por razones de seguridad)
 
@@ -42,18 +40,13 @@ func GetPublications(min int, pChan chan []stuff.Document) error {
 		// repasa la informacion,
 		var d stuff.Document
 		// cambia los valores de publication
-		err := m.Scan(&d.ID, &d.Title, &d.Mineatura, &d.Body)
-		if err != nil {
-			close(pChan)
-
-			log.Println(err)
-			return err
-		}
+		m.Scan(&d.ID, &d.Title, &d.Mineatura, &d.Body)
+		
 		pubs = append(pubs, d)
 		// los agrega a una listaa
 	}
 
 	pChan <- pubs
 
-	return nil
+
 }

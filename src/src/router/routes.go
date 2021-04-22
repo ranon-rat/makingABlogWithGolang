@@ -35,9 +35,8 @@ func Routes() {
 	r.HandleFunc("/publication/{id:[0-9]+}", controllers.RenderInfo)
 	port, ok := os.LookupEnv("PORT")
 
-	if ok == false {
+	if !ok {
 		port = "8080"
 	}
-
 	log.Println(http.ListenAndServe(":"+port, r))
 }

@@ -4,7 +4,7 @@ import (
 	_ "github.com/mattn/go-sqlite3"
 )
 
-func GetTheSizeOfTheQuery(sizeChan chan int) error {
+func GetTheSizeOfTheQuery(sizeChan chan int) {
 	q := `SELECT COUNT(*) FROM publ`
 	// como no he encontrado muchas maneras de encontrar el
 	//tamaño de una tabla lo que hace aqui es basicamente seleccionar el maximo valor
@@ -16,6 +16,5 @@ func GetTheSizeOfTheQuery(sizeChan chan int) error {
 	for m.Next() {
 		m.Scan(&dataSize)
 	}
-	sizeChan <- dataSize
-	return nil
+	return 
 }

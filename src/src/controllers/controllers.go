@@ -18,9 +18,6 @@ func Check(c chan bool, d stuff.Document, w http.ResponseWriter) {
 	c <- d.Body == "" || d.Title == "" || d.Mineatura == "" || err != nil
 }
 
-
-
-
 // this is the ap
 
 func Api(w http.ResponseWriter, r *http.Request) {
@@ -31,13 +28,13 @@ func Api(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte("something is wrong"))
 		return
 	}
-
+	
 	// concurrency communication
 	//the db management
 	sizeChan, dChan := make(chan int), make(chan []stuff.Document)
 
 	// we use this function only one time so, im only usign a anon function 😩
-
+	
 	go dataControll.GetPublications(min, dChan)
 	go dataControll.GetTheSizeOfTheQuery(sizeChan)
 	api := stuff.Publications{

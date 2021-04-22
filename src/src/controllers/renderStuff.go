@@ -11,22 +11,17 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/ranon-rat/blog/src/dataControll"
 	"github.com/ranon-rat/blog/src/stuff"
+	"golang.org/x/sync/errgroup"
 )
 
-func RenderMarkdown(p chan stuff.Document, publicationChan chan stuff.Document, errChan chan error) {
+func RenderMarkdown(p chan stuff.Document, publicationChan chan stuff.Document) {
 	// lo que hace es parsear el markdown en html
 	extensions := parser.CommonExtensions | parser.AutoHeadingIDs
 	parser := parser.NewWithExtensions(extensions)
 	// for now im doing this
 	// but i want to use this with a db
 
-	d, err := <-publicationChan, <-errChan
-	if err != nil {
-		p <- d
-		log.Println(err)
-		return
-	}
-	
+	d := <-publicationChan
 	// ya sabe, concurrencia
 	// obtiene el markdown
 	d.Body = string(markdown.ToHTML([]byte(d.Body), parser, nil)) // despues lo pasa a html
@@ -35,6 +30,7 @@ func RenderMarkdown(p chan stuff.Document, publicationChan chan stuff.Document, 
 }
 func RenderInfo(w http.ResponseWriter, r *http.Request) {
 	attr := mux.Vars(r)
+	var controlErrors errgroup.Group
 	// get the id of the publication
 	id, err := strconv.Atoi(attr["id"])
 	if err != nil {
@@ -44,12 +40,19 @@ func RenderInfo(w http.ResponseWriter, r *http.Request) {
 	}
 	p := make(chan stuff.Document)
 	// then decode the markdown to html
-	d, errChan := make(chan stuff.Document), make(chan error)
-	go dataControll.GetOnlyOnePublication(id, d, errChan)
-	go RenderMarkdown(p, d, errChan)
-	t, err := template.ParseFiles("view/template.html")
-	if err != nil {
+
+	d := make(chan stuff.Document)
+	controlErrors.Go(func() error {
+		return dataControll.GetOnlyOnePublication(id, d)
+	})
+	go RenderMarkdown(p, d)
+	
+	t, _ := template.ParseFiles("view/template.html")
+	
+	if err=controlErrors.Wait();err != nil {
+		log.Println(err)
 		w.Write([]byte(err.Error()))
+
 		return
 	}
 	// the goroutines are the best
