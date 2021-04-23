@@ -13,8 +13,11 @@ RUN cat database/inicialize.sql | sqlite3 database/publications.db
 WORKDIR /go/blog/public/script
 
 RUN tsc *.ts
-# delete some things
 RUN rm -rf *.ts
+RUN unzip *zip
+WORKDIR /go/blog/public/style
+# delete some things
+RUN tsc *.ts
 WORKDIR /go/blog/
 #compile
 RUN go build main.go
