@@ -4,7 +4,7 @@ COPY . ./blog
 WORKDIR /go/blog/
 RUN apk update && apk upgrade && apk add build-base
 # install the dependencies
-RUN apk add sqlite  && apk add npm 
+RUN apk add sqlite  && apk add npm  && apk add zip
 RUN npm install -g typescript
 # init the database
 RUN cat database/inicialize.sql | sqlite3 database/publications.db
