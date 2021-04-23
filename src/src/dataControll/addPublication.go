@@ -12,7 +12,7 @@ import (
 func AddPublication(e stuff.Document) error {
 	q := `INSERT INTO 
 	publ(title,mineatura,body) 
-	values($1,$2,$3);
+	values(?1,?2,?3);
 	`
 	db := GetConnection()
 	defer db.Close()
