@@ -44,7 +44,7 @@ func NewPost(w http.ResponseWriter, r *http.Request) {
 			json.NewDecoder(r.Body).Decode(&d)
 			
 			// this is for check if something is wrong
-			go Check(cont, d, w)
+			go Check(cont, d)
 			if <-cont {
 				log.Println("fuck")
 				return

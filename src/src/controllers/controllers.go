@@ -12,7 +12,7 @@ import (
 )
 
 // this only is for the styles and script
-func Check(c chan bool, d stuff.Document, w http.ResponseWriter) {
+func Check(c chan bool, d stuff.Document) {
 	_, err := http.Get(d.Mineatura)
 	log.Println(d, err)
 	c <- d.Body == "" || d.Title == "" || d.Mineatura == "" || err != nil

@@ -14,15 +14,17 @@ WORKDIR /go/blog/public/script
 
 RUN tsc *.ts
 RUN rm -rf *.ts
-RUN unzip *zip
+RUN unzip *.zip
+RUN unzip *.zip ;rm -rf *.zip
 WORKDIR /go/blog/public/style
 # delete some things
-RUN tsc *.ts
+RUN unzip *.zip ;rm -rf *.zip
+
 WORKDIR /go/blog/
 #compile
 RUN go build main.go
 # delete
 RUN  rm -rf database/inicialize.sql
-RUN  apk del npm 
+RUN  apk del npm && apk del zip
 
 CMD ["./main"]

@@ -22,29 +22,36 @@ func RenderMarkdown(p chan stuff.Document, publicationChan chan stuff.Document) 
 	d := <-publicationChan
 	// ya sabe, concurrencia
 	// obtiene el markdown
-	d.Body = string(markdown.ToHTML([]byte(d.Body), parser, nil)) // despues lo pasa a html
+	d.Body = string(markdown.ToHTML([]byte(d.Body), parser, nil))
+	if d.Body==""{
+		d=stuff.Document{
+			Body:"<h1>non-existent publication</h1>",
+			Title: "Something is wrong",
+		}
+	} // despues lo pasa a html
 	p <- d                                                        // al final hace lo siguiente
 
 }
 func RenderInfo(w http.ResponseWriter, r *http.Request) {
-	attr := mux.Vars(r)
+
 
 	// get the id of the publication
-	id,_ := strconv.Atoi(attr["id"])
+	id,_ := strconv.Atoi(mux.Vars(r)["id"])
 
-	p := make(chan stuff.Document)
-	// then decode the markdown to html
+	publication ,document:= make(chan stuff.Document),make(chan stuff.Document)
+		// then decode the markdown to html
 
-	d := make(chan stuff.Document)
+
 	
-	go dataControll.GetOnlyOnePublication(id, d)
+	go dataControll.GetOnlyOnePublication(id, document)
 	
-	go RenderMarkdown(p, d)
+	go RenderMarkdown(publication,document)
 	
 	t, _ := template.ParseFiles("view/template.html")
 	
 	
 	// the goroutines are the best
 	//aqui estamos usando templates para evitar que tener que estar usando otra cosa
-	t.Execute(w, <-p)
+
+	t.Execute(w, <-publication)
 }
